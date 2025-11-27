@@ -15,7 +15,7 @@ export default async function Home() {
         <h1 className="text-5xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-6xl">
           Welcome to <a href="https://nextjs.org">Next.js! {settings.data.name}</a>
         </h1>
-        
+
         <p className="mt-6 text-2xl text-zinc-700 dark:text-zinc-300">
           Get started by editing <code className="rounded-md bg-zinc-100 p-1 dark:bg-zinc-800">app/page.tsx</code>
         </p>
