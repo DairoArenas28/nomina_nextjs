@@ -1,3 +1,46 @@
 {
-    "name": "Hola"
+    "data": [
+        {
+            "id": 1,
+            "name": "Carlos López",
+            "age": 30,
+            "documentType": "CC",
+            "documentNumber": "1032456789",
+            "country": "Colombia",
+            "address": "Cra 45 #50-21, Medellín",
+            "phone": "3004567890",
+            "email": "carlos.lopez@example.com",
+            "hireDate": "2023-05-10",
+            "contractType": "Indefinido",
+            "position": "Auxiliar administrativo",
+            "salary": 1600000,
+            "eps": "Sura",
+            "pension": "Protección",
+            "arl": "ARL Sura",
+            "bank": "Bancolombia",
+            "accountType": "Ahorros",
+            "accountNumber": "12345678901"
+        },
+        {
+            "id": 2,
+            "name": "Dairo Arenas",
+            "age": 30,
+            "documentType": "CC",
+            "documentNumber": "1032456789",
+            "country": "Colombia",
+            "address": "Cra 45 #50-21, Medellín",
+            "phone": "3004567890",
+            "email": "dairo.arenas@example.com",
+            "hireDate": "2023-05-10",
+            "contractType": "Indefinido",
+            "position": "Auxiliar administrativo",
+            "salary": 1600000,
+            "eps": "Sura",
+            "pension": "Protección",
+            "arl": "ARL Sura",
+            "bank": "Bancolombia",
+            "accountType": "Ahorros",
+            "accountNumber": "12345678901"
+        }
+    ]
 }

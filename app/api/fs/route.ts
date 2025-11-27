@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     try {
         const content = await fs.readFile(filePath, "utf-8")
         const json = JSON.parse(content)
-        return NextResponse.json({ data: json })
+        return NextResponse.json( json )
     } catch (error) {
         return NextResponse.json({ error }, { status: 404 })
     }
