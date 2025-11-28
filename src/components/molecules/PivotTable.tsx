@@ -41,29 +41,44 @@ export default function PivotTable({ data }: Props) {
     return (
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
 
-            <button
-                onClick={() => api?.exportDataAsCsv({
-                    fileName: nameCSV + ".csv",
-                    columnSeparator: ";",
-                    suppressQuotes: true
-                })}
-                className="mb-3 px-4 py-2 bg-sky-600 text-white rounded"
-            >
-                Exportar a Excel
-            </button>
+            <div className="flex mb-3 flex-row justify-between">
+                <div>
+                    <button
+                        onClick={() => api?.exportDataAsCsv({
+                            fileName: nameCSV + ".csv",
+                            columnSeparator: ";",
+                            suppressQuotes: true
+                        })}
+                        className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
+                    >
+                        Exportar a Excel
+                    </button>
 
-            <input
-                type="text"
-                placeholder="Buscar..."
-                onChange={(e) =>
-                    gridRef.current?.api.setGridOption("quickFilterText", e.target.value)
-                }
-                className="border p-2 rounded"
-            />
 
-            <button onClick={handleGetSelected} className="p-2 bg-blue-500 text-white">
-                Ver seleccionados
-            </button>
+                </div>
+                <div className="flex gap-3">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        onChange={(e) =>
+                            gridRef.current?.api.setGridOption("quickFilterText", e.target.value)
+                        }
+                        className="p-2 rounded-xl bg-gray-200 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+
+                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
+                        Visualizar
+                    </button>
+
+                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-blue-500 text-white cursor-pointer">
+                        Editar
+                    </button>
+
+                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-red-500 text-white cursor-pointer">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
 
             <AgGridReact
                 ref={gridRef}

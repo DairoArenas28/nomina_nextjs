@@ -45,8 +45,8 @@ export default function RootLayout({
           </div>
         </aside>
 
-        <div className="sm:ml-64 bg-amber-200 min-h-screen flex flex-col">
-          <div className="p-4 border-default border-dashed rounded-base flex-1 flex">
+        <div className="sm:ml-64 min-h-screen flex flex-col">
+          <div className="border-default border-dashed rounded-base flex-1 flex">
             {children}
           </div>
         </div>
