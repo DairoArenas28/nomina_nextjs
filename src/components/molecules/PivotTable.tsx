@@ -11,16 +11,18 @@ import { columnDefsEmployee, RowType } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Employee } from "@/src/types/employee.type";
+import { UseMutationResult } from "@tanstack/react-query";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
     data: Employee[];
+    deleteHooks: UseMutationResult<unknown, Error, number, unknown>
 }
 
 
-export default function PivotTable({ data }: Props) {
+export default function PivotTable({ data, deleteHooks }: Props) {
 
     const [api, setApi] = useState<GridApi | null>(null);
 
@@ -30,12 +32,28 @@ export default function PivotTable({ data }: Props) {
 
     const nameCSV = path.replace("/", "")
 
+
+
     const handleGetSelected = () => {
         const selected = gridRef.current?.api.getSelectedRows() ?? [];
         // ejemplo: obtener solo los nombres
-        const names = selected.map((row) => row.id);
+        const id = selected.map((row) => row.id);
 
-        console.log("Seleccionados:", names);
+        deleteHooks.mutate(id[0])
+        //console.log("Seleccionados:", names);
+    };
+
+    const handleDeleteSelected = () => {
+        const selected = gridRef.current?.api.getSelectedRows() ?? [];
+
+        if (selected.length === 0) {
+            alert("Seleccione un registro");
+            return;
+        }
+
+        const id = selected[0].id;
+
+        deleteHooks.mutate(id);
     };
 
     return (
@@ -74,7 +92,7 @@ export default function PivotTable({ data }: Props) {
                         Editar
                     </button>
 
-                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-red-500 text-white cursor-pointer">
+                    <button onClick={handleDeleteSelected} className="rounded-xl p-2 bg-red-500 text-white cursor-pointer">
                         Eliminar
                     </button>
                 </div>

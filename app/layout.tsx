@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "@/src/components/atoms/Link";
 import { LinkSiderData } from "@/src/static/LinkSiderData";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
@@ -47,7 +49,9 @@ export default function RootLayout({
 
         <div className="sm:ml-64 min-h-screen flex flex-col">
           <div className="border-default border-dashed rounded-base flex-1 flex">
-            {children}
+            <Providers>
+              {children}
+            </Providers>
           </div>
         </div>
       </body>
