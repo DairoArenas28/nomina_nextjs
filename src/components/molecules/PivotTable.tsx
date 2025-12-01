@@ -7,32 +7,36 @@ import { AllCommunityModule } from "ag-grid-community";
 import type { GridApi } from "ag-grid-community";
 
 import { localeES } from "@/src/es/TextTablePivotSpanish";
-import { columnDefsEmployee, RowType } from "@/src/static/ColumnDefsTable";
+import { RowType } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Employee } from "@/src/types/employee.type";
 import { UseMutationResult } from "@tanstack/react-query";
+import ModalForm from "./ModalForm";
+import { EditUserForm } from "../organisms/EditEmployeForm";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
     data: Employee[];
+    columnDefs: any[];
     deleteHooks: UseMutationResult<unknown, Error, number, unknown>
+    entity: "employee";
 }
 
 
-export default function PivotTable({ data, deleteHooks }: Props) {
+export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Props) {
 
     const [api, setApi] = useState<GridApi | null>(null);
 
     const gridRef = useRef<AgGridReact<RowType>>(null);
 
-    const path = usePathname()
+    const [open, setOpen] = useState(false);
 
-    const nameCSV = path.replace("/", "")
+    const [idSelected, setIdSelected] = useState(0)
 
-
+    const [mode, setMode] = useState<"create" | "edit">("create");
 
     const handleGetSelected = () => {
         const selected = gridRef.current?.api.getSelectedRows() ?? [];
@@ -41,6 +45,15 @@ export default function PivotTable({ data, deleteHooks }: Props) {
 
         deleteHooks.mutate(id[0])
         //console.log("Seleccionados:", names);
+    };
+
+    const handleEditSelected = () => {
+        const selected = gridRef.current?.api.getSelectedRows() ?? [];
+        if (selected.length === 0) return alert("Seleccione un registro");
+
+        setIdSelected(selected[0].id);
+        setMode("edit");
+        setOpen(true);
     };
 
     const handleDeleteSelected = () => {
@@ -56,6 +69,36 @@ export default function PivotTable({ data, deleteHooks }: Props) {
         deleteHooks.mutate(id);
     };
 
+    function FormResolver() {
+        const record = data.find(x => x.id === idSelected);
+
+        if (entity === "employee" && mode === "edit") {
+            return (
+                <EditUserForm
+                    initialData={record!}
+                    onSubmit={(updatedData) => {
+                        console.log("Empleado actualizado", updatedData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }
+
+        /*if (entity === "employee" && mode === "create") {
+            return (
+                <CreateEmployeeForm
+                    onSubmit={(newData) => {
+                        console.log("Empleado creado", newData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }*/
+
+        // Puedes extender así con product, roles, etc.
+        return <div>No existe formulario para esta operación</div>;
+    }
+
     return (
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
 
@@ -63,7 +106,7 @@ export default function PivotTable({ data, deleteHooks }: Props) {
                 <div>
                     <button
                         onClick={() => api?.exportDataAsCsv({
-                            fileName: nameCSV + ".csv",
+                            fileName: entity + ".csv",
                             columnSeparator: ";",
                             suppressQuotes: true
                         })}
@@ -88,7 +131,7 @@ export default function PivotTable({ data, deleteHooks }: Props) {
                         Visualizar
                     </button>
 
-                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-blue-500 text-white cursor-pointer">
+                    <button onClick={handleEditSelected} className="rounded-xl p-2 bg-blue-500 text-white cursor-pointer">
                         Editar
                     </button>
 
@@ -106,10 +149,14 @@ export default function PivotTable({ data, deleteHooks }: Props) {
                 }}
                 rowData={data}
                 localeText={localeES}
-                columnDefs={columnDefsEmployee}
+                columnDefs={columnDefs}
                 onGridReady={(params) => setApi(params.api)}
                 pagination={true}
             />
+
+            <ModalForm isOpen={open} onClose={() => setOpen(false)}>
+                <FormResolver />
+            </ModalForm>
         </div>
     );
 }

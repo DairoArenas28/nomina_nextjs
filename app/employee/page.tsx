@@ -2,7 +2,8 @@
 import PivotTable from "@/src/components/molecules/PivotTable";
 import { EmployeeResponseSchema } from "@/src/types/employee.type";
 import { useQuery } from "@tanstack/react-query";
-import { useDeleteEmployee } from "./hooks/employee-delete.action";
+import { useDeleteEmployee } from "./hooks/employee-delete.hook";
+import { columnDefsEmployee } from "@/src/static/ColumnDefsTable";
 
 export default function EmployeePage() {
 
@@ -22,7 +23,7 @@ export default function EmployeePage() {
   return (
     <div className="flex w-full items-center justify-center font-sans dark:bg-black bg-gray-300">
       <main className="flex  w-full max-w-8xl flex-col items-center justify-between py-32 px-16 bg-gray-300 dark:bg-black sm:items-start">
-        <PivotTable data={data ?? []} deleteHooks={deleteMutation}/>
+        <PivotTable data={data ?? []} columnDefs={columnDefsEmployee} deleteHooks={deleteMutation} entity="employee" />
       </main>
     </div>
   )
