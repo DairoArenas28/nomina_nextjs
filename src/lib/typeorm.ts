@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import * as Entities from "@/src/entities";
+import { Employee } from "../entities/Employee";
 
 let dataSource: DataSource;
 
@@ -9,8 +9,11 @@ export const getDataSource = async () => {
         dataSource = new DataSource({
             type: "postgres",
             url: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            },
             synchronize: true,
-            entities: Object.values(Entities), // 👈 Todas automáticamente
+            entities: [Employee], // 👈 Todas automáticamente
         });
 
         if (!dataSource.isInitialized) {

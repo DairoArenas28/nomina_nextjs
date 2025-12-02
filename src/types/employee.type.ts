@@ -14,7 +14,7 @@ export const EmployeeSchema = z.object({
     hireDate: z.string(), // formato YYYY-MM-DD (opcional: se puede validar más)
     contractType: z.string(),
     position: z.string(),
-    salary: z.number().min(0),
+    salary: z.string().transform(Number),
 
     eps: z.string(),
     pension: z.string(),

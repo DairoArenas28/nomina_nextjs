@@ -1,7 +1,9 @@
 
 
-import { Employee } from "@/src/entities";
+
+import { Employee } from "@/src/entities/Employee";
 import { getDataSource } from "@/src/lib/typeorm";
+import { EmployeeResponseSchema } from "@/src/types/employee.type";
 import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
@@ -19,10 +21,18 @@ const filePath = path.join(process.cwd(), "public", "data.json")
 }*/
 export async function GET() {
     const db = await getDataSource();
-    const userRepo = db.getRepository(Employee);
+    const employeeRepo = db.getRepository(Employee);
 
-    const users = await userRepo.find();
-    return NextResponse.json(users);
+    const employees = await employeeRepo.find();
+
+    // Validación con Zod
+    const parsed = EmployeeResponseSchema.parse({
+        data: employees,
+    });
+
+    console.log(parsed)
+
+    return NextResponse.json(parsed);
 }
 
 export async function POST(request: NextRequest) {
