@@ -25,10 +25,10 @@ export const EmployeeSchema = z.object({
     accountNumber: z.string()
 });
 
-export const EmployeeResponseSchema = z.object({
-    data: z.array(EmployeeSchema),
-});
+export const EmployeeWithoutId = EmployeeSchema.omit({ id: true });
+export const EmployeeResponseSchema = z.array(EmployeeSchema)
 
 // Tipo inferido automáticamente
 export type EmployeeResponse = z.infer<typeof EmployeeResponseSchema>;
 export type Employee = z.infer<typeof EmployeeSchema>;
+export type EmployeeWithoutId = Omit<Employee, "id">;

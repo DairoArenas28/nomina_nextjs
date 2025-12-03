@@ -1,15 +1,10 @@
-
-
-
 import { Employee } from "@/src/entities/Employee";
 import { getDataSource } from "@/src/lib/typeorm";
 import { EmployeeResponseSchema } from "@/src/types/employee.type";
-import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
 
-const filePath = path.join(process.cwd(), "public", "data.json")
-
+const db = await getDataSource();
+const employeeRepo = db.getRepository(Employee);
 /*export async function GET(request: NextRequest) {
     try {
         const content = await fs.readFileSync(filePath, "utf-8")
@@ -20,26 +15,23 @@ const filePath = path.join(process.cwd(), "public", "data.json")
     }
 }*/
 export async function GET() {
-    const db = await getDataSource();
-    const employeeRepo = db.getRepository(Employee);
-
     const employees = await employeeRepo.find();
-
     // Validación con Zod
-    const parsed = EmployeeResponseSchema.parse({
-        data: employees,
-    });
-
+    const parsed = EmployeeResponseSchema.parse(employees);
     console.log(parsed)
-
     return NextResponse.json(parsed);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
-        await fs.writeFileSync(filePath, JSON.stringify(body, null, 2), "utf-8");
-        return NextResponse.json({ message: "JSON replaced successfully" });
+        
+        const body = await req.json()
+
+        const employee = employeeRepo.create(body)
+
+        const saved = await employeeRepo.save(employee)
+
+        return NextResponse.json({ data: saved, message: "JSON replaced successfully" });
     } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
     }

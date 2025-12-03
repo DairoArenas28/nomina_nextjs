@@ -9,11 +9,11 @@ import type { GridApi } from "ag-grid-community";
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { RowType } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { Employee } from "@/src/types/employee.type";
+import { Employee, EmployeeWithoutId } from "@/src/types/employee.type";
 import { UseMutationResult } from "@tanstack/react-query";
 import ModalForm from "./ModalForm";
-import { EditUserForm } from "../organisms/EditEmployeForm";
+import { EditEmployeeForm } from "../organisms/EditEmployeForm";
+import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -21,12 +21,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 interface Props {
     data: Employee[];
     columnDefs: any[];
+    createHooks: UseMutationResult<unknown, Error, EmployeeWithoutId, unknown>
     deleteHooks: UseMutationResult<unknown, Error, number, unknown>
-    entity: "employee";
+    entity: string;
 }
 
 
-export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Props) {
+export default function PivotTable({ data, columnDefs, createHooks, deleteHooks, entity }: Props) {
 
     const [api, setApi] = useState<GridApi | null>(null);
 
@@ -37,6 +38,19 @@ export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Pr
     const [idSelected, setIdSelected] = useState(0)
 
     const [mode, setMode] = useState<"create" | "edit">("create");
+
+    console.log(data)
+
+    const handleCreateSelected = () => {
+        //const selected = gridRef.current?.api.getSelectedRows() ?? [];
+        // ejemplo: obtener solo los nombres
+        //const id = selected.map((row) => row.id);
+
+        //deleteHooks.mutate(id[0])
+        //console.log("Seleccionados:", names);
+        setMode("create");
+        setOpen(true);
+    };
 
     const handleGetSelected = () => {
         const selected = gridRef.current?.api.getSelectedRows() ?? [];
@@ -74,7 +88,7 @@ export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Pr
 
         if (entity === "employee" && mode === "edit") {
             return (
-                <EditUserForm
+                <EditEmployeeForm
                     initialData={record!}
                     onSubmit={(updatedData) => {
                         console.log("Empleado actualizado", updatedData);
@@ -84,16 +98,17 @@ export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Pr
             );
         }
 
-        /*if (entity === "employee" && mode === "create") {
+        if (entity === "employee" && mode === "create") {
             return (
                 <CreateEmployeeForm
                     onSubmit={(newData) => {
+                        createHooks.mutate(newData)
                         console.log("Empleado creado", newData);
                         setOpen(false);
                     }}
                 />
             );
-        }*/
+        }
 
         // Puedes extender así con product, roles, etc.
         return <div>No existe formulario para esta operación</div>;
@@ -126,6 +141,10 @@ export default function PivotTable({ data, columnDefs, deleteHooks, entity }: Pr
                         }
                         className="p-2 rounded-xl bg-gray-200 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+
+                    <button onClick={handleCreateSelected} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
+                        Crear
+                    </button>
 
                     <button onClick={handleGetSelected} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
                         Visualizar

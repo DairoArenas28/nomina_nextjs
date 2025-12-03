@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EditUserFields } from "../molecules/EditEmployeeFields";
+import { EmployeeFields } from "../molecules/EmployeeFields";
 import { Employee } from "@/src/types/employee.type";
 
 interface EditUserFormProps {
@@ -7,7 +7,7 @@ interface EditUserFormProps {
     onSubmit: (data: Employee) => void
 }
 
-export function EditUserForm({ initialData, onSubmit }: EditUserFormProps) {
+export function EditEmployeeForm({ initialData, onSubmit }: EditUserFormProps) {
 
     if (!initialData) {
         return <div>Selecciona un empleado</div>;
@@ -26,7 +26,7 @@ export function EditUserForm({ initialData, onSubmit }: EditUserFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
-            <EditUserFields data={formData} onChange={handleChange} />
+            <EmployeeFields data={formData} onChange={handleChange} />
 
             <button className="bg-blue-600 text-white px-4 py-2 rounded">
                 Guardar cambios
