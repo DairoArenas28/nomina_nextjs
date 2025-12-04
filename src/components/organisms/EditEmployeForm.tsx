@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { EmployeeFields } from "../molecules/EmployeeFields";
-import { Employee } from "@/src/types/employee.type";
+import { Employee, EmployeeWithoutId } from "@/src/types/employee.type";
 
 interface EditUserFormProps {
-    initialData: Employee,
-    onSubmit: (data: Employee) => void
+    initialData: EmployeeWithoutId,
+    onSubmit: (data: EmployeeWithoutId) => void
 }
 
 export function EditEmployeeForm({ initialData, onSubmit }: EditUserFormProps) {
@@ -15,7 +15,7 @@ export function EditEmployeeForm({ initialData, onSubmit }: EditUserFormProps) {
 
     const [formData, setFormData] = useState(initialData);
 
-    const handleChange = (field: keyof Employee, value: string) => {
+    const handleChange = (field: keyof EmployeeWithoutId, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 

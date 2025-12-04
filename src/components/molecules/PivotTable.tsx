@@ -22,12 +22,13 @@ interface Props {
     data: Employee[];
     columnDefs: any[];
     createHooks: UseMutationResult<unknown, Error, EmployeeWithoutId, unknown>
+    updateHooks: UseMutationResult<unknown, Error, { id: number } & EmployeeWithoutId, unknown>
     deleteHooks: UseMutationResult<unknown, Error, number, unknown>
     entity: string;
 }
 
 
-export default function PivotTable({ data, columnDefs, createHooks, deleteHooks, entity }: Props) {
+export default function PivotTable({ data, columnDefs, createHooks, updateHooks, deleteHooks, entity }: Props) {
 
     const [api, setApi] = useState<GridApi | null>(null);
 
@@ -65,6 +66,7 @@ export default function PivotTable({ data, columnDefs, createHooks, deleteHooks,
         const selected = gridRef.current?.api.getSelectedRows() ?? [];
         if (selected.length === 0) return alert("Seleccione un registro");
 
+        //updateHooks.reset();
         setIdSelected(selected[0].id);
         setMode("edit");
         setOpen(true);
@@ -91,6 +93,7 @@ export default function PivotTable({ data, columnDefs, createHooks, deleteHooks,
                 <EditEmployeeForm
                     initialData={record!}
                     onSubmit={(updatedData) => {
+                        updateHooks.mutate({ id: idSelected, ...updatedData })
                         console.log("Empleado actualizado", updatedData);
                         setOpen(false);
                     }}

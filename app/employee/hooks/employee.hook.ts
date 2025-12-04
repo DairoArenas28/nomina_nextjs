@@ -29,6 +29,27 @@ export function useCreateEmployee() {
     })
 }
 
+export function useUpdateEmployee() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationKey: ["employee-update"],
+        mutationFn: async ({ id, ...data }: { id: number } & EmployeeWithoutId) => {
+            const res = await fetch(`http://localhost:3000/api/employee/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            if (!res.ok) {
+                throw new Error("Error al actualizar empleado")
+            }
+            return res.json()
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["employees"] })
+        }
+    })
+}
+
 export function useDeleteEmployee() {
 
     const queryClient = useQueryClient()
