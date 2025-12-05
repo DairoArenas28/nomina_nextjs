@@ -94,3 +94,15 @@ Horas extras (si aplica)
 Ausencias o incapacidades
 
 Auxilio de transporte (si aplica)
+
+
+
+Tabla de Nomina
+Periodo				
+[01/12/2025 - 31/12/2025]   
+
+Devengado	
+
+Deduccido	
+
+Total

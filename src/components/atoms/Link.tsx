@@ -16,7 +16,8 @@ export default function Link({ name, href, icon }: Props) {
                 </span>
             )}
             <span className="flex-1 ms-3 whitespace-nowrap">{name}</span>
-            <span className="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded-sm">Pro</span>
+            
         </a>
     )
+    //<span className="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded-sm">Pro</span>
 }
