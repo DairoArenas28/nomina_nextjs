@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
 @Entity()
 export class Employee {
@@ -59,4 +59,5 @@ export class Employee {
 
     @Column({ length: 30 })
     accountNumber: string;
+    
 }

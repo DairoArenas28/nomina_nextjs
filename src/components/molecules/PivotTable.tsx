@@ -40,7 +40,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
 
     const [mode, setMode] = useState<"create" | "edit">("create");
 
-    console.log(data)
+    //console.log(data)
 
     const handleCreateSelected = () => {
         //const selected = gridRef.current?.api.getSelectedRows() ?? [];
@@ -94,7 +94,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                     initialData={record!}
                     onSubmit={(updatedData) => {
                         updateHooks.mutate({ id: idSelected, ...updatedData })
-                        console.log("Empleado actualizado", updatedData);
+                        //console.log("Empleado actualizado", updatedData);
                         setOpen(false);
                     }}
                 />
@@ -106,7 +106,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                 <CreateEmployeeForm
                     onSubmit={(newData) => {
                         createHooks.mutate(newData)
-                        console.log("Empleado creado", newData);
+                        //console.log("Empleado creado", newData);
                         setOpen(false);
                     }}
                 />

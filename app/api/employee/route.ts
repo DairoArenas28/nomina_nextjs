@@ -18,7 +18,7 @@ export async function GET() {
     const employees = await employeeRepo.find();
     // Validación con Zod
     const parsed = EmployeeResponseSchema.parse(employees);
-    console.log(parsed)
+    //console.log(parsed)
     return NextResponse.json(parsed);
 }
 
