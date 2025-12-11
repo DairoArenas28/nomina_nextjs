@@ -17,7 +17,7 @@ export function dividirMesEnRangos(year: number, month: number) {
 }
 
 export function formatear(date: Date) {
-  return date.toISOString().split("T")[0];
+    return date.toISOString().split("T")[0];
 }
 
 

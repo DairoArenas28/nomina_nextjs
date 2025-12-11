@@ -31,3 +31,25 @@ export function useCreateNomina() {
         }
     })
 }
+
+export function useGenerateNomina() {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationKey: ["nomina-generate"],
+        mutationFn: async (id: number) => {
+            const res = await fetch(`http://localhost:3000/api/nomina/${id}`,{
+                method: "POST"
+            })
+
+            if(!res.ok){
+                throw new Error("Error al crear el periodo")
+            }
+
+            
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["nomina"] })
+        }
+    })
+}

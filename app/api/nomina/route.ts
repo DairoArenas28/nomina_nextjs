@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getDataSource } from "@/src/lib/typeorm";
 import { Nomina } from "@/src/entities/Nomina";
 import { dividirMesEnRangos, formatear } from "@/src/utils/date";
+import { formatConsecutive } from "@/src/utils/consecutive";
 
 export async function POST(request: Request) {
     try {
@@ -23,6 +24,8 @@ export async function POST(request: Request) {
         const db = await getDataSource();
         const nominaRepo = db.getRepository(Nomina);
 
+        const totalRegister = await nominaRepo.count()
+
         const { rango1, rango2 } = dividirMesEnRangos(Number(year), Number(month));
 
         const period1 = `${formatear(rango1.inicio)} - ${formatear(rango1.fin)}`;
@@ -40,8 +43,8 @@ export async function POST(request: Request) {
             );
         }
 
-        const nominaPrimeraQuincena = nominaRepo.create({ period: period1 });
-        const nominaSegundaQuincena = nominaRepo.create({ period: period2 });
+        const nominaPrimeraQuincena = nominaRepo.create({ code: String(formatConsecutive(totalRegister + 1)),period: period1 });
+        const nominaSegundaQuincena = nominaRepo.create({ code: String(formatConsecutive(totalRegister + 2)), period: period2 });
 
         await nominaRepo.save([nominaPrimeraQuincena, nominaSegundaQuincena]);
 

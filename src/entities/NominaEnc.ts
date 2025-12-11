@@ -1,27 +1,24 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export enum NominaState {
     GENERADO = "Generado",
-    NOTGENERADO = "No Generado",
     LIQUIDADO = "Liquidado",
     PAGADO = "Pagado",
 }
+
 @Entity()
-export class Nomina {
+export class NominaEnc {
 
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column('varchar')
-    code: string
-
-    @Column('varchar')
-    period: string
+    @Column('decimal', { precision: 10, scale: 2 })
+    hoursWorked: number
 
     @Column({
-        type:"enum",
+        type: "enum",
         enum: NominaState,
-        default: NominaState.NOTGENERADO
+        default: NominaState.GENERADO
     })
     state: string
 
@@ -33,7 +30,5 @@ export class Nomina {
 
     @Column('decimal', { precision: 10, scale: 2, nullable: true })
     total: number
-
-
 
 }

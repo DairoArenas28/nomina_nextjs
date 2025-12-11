@@ -5,6 +5,7 @@ import Link from "@/src/components/atoms/Link";
 import { LinkSiderData } from "@/src/static/LinkSiderData";
 import Providers from "./providers";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

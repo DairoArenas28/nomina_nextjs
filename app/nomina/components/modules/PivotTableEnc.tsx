@@ -1,20 +1,22 @@
 'use client';
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { useQuery } from "@tanstack/react-query";
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+import { AllCommunityModule, ModuleRegistry, SelectionChangedEvent } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { Dispatch, SetStateAction } from "react";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
     columnDefs: any[];
+    onRowSelected: Dispatch<SetStateAction<number | null>>
 }
 
-export function PivotTableEnc({ columnDefs }: Props) {
+export function PivotTableEnc({ columnDefs, onRowSelected }: Props) {
 
     const { data } = useQuery({
-        queryKey: ["employees"],
+        queryKey: ["nomina"],
         queryFn: async () => {
             const res = await fetch("http://localhost:3000/api/nomina", { cache: "no-store" });
 
@@ -32,11 +34,21 @@ export function PivotTableEnc({ columnDefs }: Props) {
         gcTime: 1000 * 60 * 60 * 2
     });
 
+    const onSelectionChanged = (params: SelectionChangedEvent) => {
+        const selected = params.api.getSelectedRows()[0];
+        if (selected) onRowSelected(selected.id);
+    };
+
     return (
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
             <AgGridReact
                 rowData={data ?? []}
                 columnDefs={columnDefs}
+                rowSelection={{
+                    mode: "singleRow",
+                    enableClickSelection: true   // ⬅️ reemplazo oficial
+                }}
+                onSelectionChanged={onSelectionChanged}
                 pagination={true}
                 localeText={localeES}
             />
