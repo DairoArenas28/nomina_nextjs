@@ -4,6 +4,7 @@ import { columnDefsNomina } from "../../static";
 import { PivotTableEnc } from "../modules/PivotTableEnc";
 import ModalForm from "@/src/components/molecules/ModalForm";
 import { useState } from "react";
+import { CreateNominaForm } from "./CreateNominaForm";
 
 
 
@@ -18,7 +19,7 @@ export function NominaPage() {
             </div>
             <PivotTableEnc columnDefs={columnDefsNomina}/>
             <ModalForm isOpen={open} onClose={() => setOpen(false)}>
-                <h1>Hola</h1>
+                <CreateNominaForm />
             </ModalForm>
         </div>
     )
