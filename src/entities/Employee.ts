@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { NominaEnc } from "./NominaEnc";
 
 @Entity()
 export class Employee {
@@ -59,5 +60,7 @@ export class Employee {
 
     @Column({ length: 30 })
     accountNumber: string;
-    
+
+    //@OneToMany(() => NominaEnc, (nominaEnc) => nominaEnc.employee)
+    //nominaEnc: NominaEnc[]
 }

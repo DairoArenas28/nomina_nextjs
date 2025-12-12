@@ -1,10 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-export enum NominaState {
-    GENERADO = "Generado",
-    LIQUIDADO = "Liquidado",
-    PAGADO = "Pagado",
-}
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Employee } from "./Employee";
+import { Nomina } from "./Nomina";
+import { NominaState } from "./enums/NominaState";
 
 @Entity()
 export class NominaEnc {
@@ -30,5 +27,13 @@ export class NominaEnc {
 
     @Column('decimal', { precision: 10, scale: 2, nullable: true })
     total: number
+
+    @ManyToOne(() => Nomina)
+    @JoinColumn({name: "nomina_id"})
+    nomina: Nomina
+
+    @ManyToOne(() => Employee, {onDelete: "SET NULL"})
+    @JoinColumn({ name: "employee_id" })
+    employee: Employee
 
 }

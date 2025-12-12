@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { Employee } from "../entities/Employee";
 import { Nomina } from "../entities/Nomina";
+import { NominaEnc } from "../entities/NominaEnc";
 
 let dataSource: DataSource;
 
@@ -14,7 +15,7 @@ export const getDataSource = async () => {
                 rejectUnauthorized: false
             },
             synchronize: true,
-            entities: [Employee, Nomina], // 👈 Todas automáticamente
+            entities: [Employee, Nomina, NominaEnc], // 👈 Todas automáticamente
         });
 
         if (!dataSource.isInitialized) {
