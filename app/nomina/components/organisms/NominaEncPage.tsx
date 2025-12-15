@@ -1,5 +1,6 @@
 'use client'
 
+import { PivotTableNominaDet } from "../modules/PivotTableNominaDet";
 import { PivotTableNominaEnc } from "../modules/PivotTableNominaEnc";
 
 interface NominaEncPageProps {
@@ -14,6 +15,8 @@ export function NominaEncPage({ id }: NominaEncPageProps) {
         <div className="flex flex-col gap-3 w-full">
 
             <PivotTableNominaEnc id={id}/>
+
+            <PivotTableNominaDet id={id}/>
         </div>
 
     )

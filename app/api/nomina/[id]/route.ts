@@ -13,7 +13,14 @@ export async function GET(
     const { id } = await context.params;
     const db = await getDataSource()
     const nominaEncRepo = db.getRepository(NominaEnc)
-    const nominaEnc = await nominaEncRepo.findBy({nomina: {id: Number(id)}})
+    const nominaEnc = await nominaEncRepo.find({
+        where: {
+            nomina: { id: Number(id) }
+        },
+        relations: {
+            employee: true
+        }
+    });
     return NextResponse.json(nominaEnc);
 }
 
@@ -27,16 +34,16 @@ export async function POST(
     const employeeRepo = db.getRepository(Employee)
     const nominaEncRepo = db.getRepository(NominaEnc)
 
-    const nomina = await nominaRepo.findBy({id: Number(id)})
+    const nomina = await nominaRepo.findBy({ id: Number(id) })
     const employees = await employeeRepo.find()
     const totalRegisterNominaEnc = await nominaEncRepo.count()
 
-    if(!nomina){
-        return NextResponse.json({message: "Nómina no encontrada, verifica por favor"})
+    if (!nomina) {
+        return NextResponse.json({ message: "Nómina no encontrada, verifica por favor" })
     }
 
-    if(!employees){
-        return NextResponse.json({message: "No hay empleados para generar la nómina, verifica por favor"})
+    if (!employees) {
+        return NextResponse.json({ message: "No hay empleados para generar la nómina, verifica por favor" })
     }
 
     employees.map((content) => {
@@ -46,7 +53,7 @@ export async function POST(
         newNominaEnc.deducted = 20000
         newNominaEnc.accrual = 20000
         newNominaEnc.nomina = { id: Number(id) } as Nomina
-        newNominaEnc.employee = { id: content.id} as Employee
+        newNominaEnc.employee = { id: content.id } as Employee
 
         nominaEncRepo.save(newNominaEnc)
     })

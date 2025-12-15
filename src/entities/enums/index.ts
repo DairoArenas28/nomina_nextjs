@@ -4,3 +4,8 @@ export enum NominaState {
     LIQUIDADO = "Liquidado",
     PAGADO = "Pagado",
 }
+
+export enum ConceptType {
+    DEVENGADOS = 'Devengado',
+    DEDUCIDOS = 'Deducido'
+}

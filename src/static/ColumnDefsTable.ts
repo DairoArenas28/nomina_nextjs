@@ -1,7 +1,7 @@
 
 import { ColDef } from "ag-grid-community";
 
-export type RowType = {
+export type RowTypeEmployee = {
     id: number;
     name: string;
     age: number;
@@ -26,8 +26,18 @@ export type RowType = {
     accountNumber: string;
 };
 
+export type RowTypeConcept = {
 
-export const columnDefsEmployee: ColDef<RowType>[] = [
+    id: number,
+    code: string,
+    description: string
+    type: string
+    value: string
+
+}
+
+
+export const columnDefsEmployee: ColDef<RowTypeEmployee>[] = [
     { headerName: "Nombre completo", field: "name", sortable: true, filter: true },
     { headerName: "Edad del empleado", field: "age", sortable: true, filter: true },
     { headerName: "Tipo de documento", field: "documentType", sortable: true, filter: true },
@@ -47,3 +57,11 @@ export const columnDefsEmployee: ColDef<RowType>[] = [
     { headerName: "Tipo de cuenta", field: "accountType", sortable: true, filter: true },
     { headerName: "Número de cuenta", field: "accountNumber", sortable: true, filter: true },
 ];
+
+export const columnDefsConcept: ColDef<RowTypeConcept>[] = [
+    { headerName: "Código", field: "code", sortable: true, filter: true },
+    { headerName: "Descripción", field: "description", sortable: true, filter: true },
+    { headerName: "Tipo Concepto", field: "type", sortable: true, filter: true },
+    { headerName: "Tipo Valor", field: "value", sortable: true, filter: true },
+
+]

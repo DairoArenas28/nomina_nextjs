@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Employee } from "./Employee";
 import { Nomina } from "./Nomina";
-import { NominaState } from "./enums/NominaState";
+import { NominaState } from "./enums";
 
 @Entity()
 export class NominaEnc {

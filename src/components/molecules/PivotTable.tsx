@@ -19,11 +19,11 @@ import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
-    data: Employee[];
+    data: Employee[] ;
     columnDefs: any[];
-    createHooks: UseMutationResult<unknown, Error, EmployeeWithoutId, unknown>
-    updateHooks: UseMutationResult<unknown, Error, { id: number } & EmployeeWithoutId, unknown>
-    deleteHooks: UseMutationResult<unknown, Error, number, unknown>
+    createHooks?: UseMutationResult<unknown, Error, EmployeeWithoutId, unknown>
+    updateHooks?: UseMutationResult<unknown, Error, { id: number } & EmployeeWithoutId, unknown>
+    deleteHooks?: UseMutationResult<unknown, Error, number, unknown>
     entity: string;
 }
 
