@@ -1,18 +1,20 @@
 "use client"
 import { Button } from "@/src/components/atoms/Button";
 import { columnDefsNomina } from "../../static";
-import { PivotTableEnc } from "../modules/PivotTableEnc";
+import { PivotTableNomina } from "../modules/PivotTableNomina";
 import ModalForm from "@/src/components/molecules/ModalForm";
 import { useState } from "react";
 import { CreateNominaForm } from "./CreateNominaForm";
 import { useGenerateNomina } from "../../hooks/nomina.hook";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 
 
 export function NominaPage() {
 
     const [open, setOpen] = useState(false)
+    const router = useRouter();
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const generateNomina = useGenerateNomina()
     const swalWithTailwind = Swal.mixin({
@@ -78,17 +80,26 @@ export function NominaPage() {
 
     }
 
+    const handleViewNomina = () => {
+        router.push(`/nomina/${selectedId}`);
+    }
+
     return (
         <div className="flex flex-col gap-3 w-full ">
             <div className="flex justify-between">
                 <div>
                     <Button text="Generar Periodo" color="bg-gray-600" onClick={() => setOpen(true)} />
                 </div>
-                <div>
-                    <Button text="Generar Nómina" color="bg-blue-600" onClick={handleGenerate} />
+                <div className="flex gap-2">
+                    <div>
+                        <Button text="Visualizar Nómina" color="bg-blue-600" onClick={handleViewNomina} />
+                    </div>
+                    <div>
+                        <Button text="Generar Nómina" color="bg-blue-600" onClick={handleGenerate} />
+                    </div>
                 </div>
             </div>
-            <PivotTableEnc columnDefs={columnDefsNomina} onRowSelected={setSelectedId} />
+            <PivotTableNomina onRowSelected={setSelectedId} />
             <ModalForm isOpen={open} onClose={() => setOpen(false)}>
                 <CreateNominaForm />
             </ModalForm>

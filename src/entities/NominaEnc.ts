@@ -9,6 +9,9 @@ export class NominaEnc {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column()
+    code: string
+
     @Column('decimal', { precision: 10, scale: 2 })
     hoursWorked: number
 

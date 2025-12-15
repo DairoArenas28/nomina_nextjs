@@ -4,16 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import { AllCommunityModule, ModuleRegistry, SelectionChangedEvent } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { Dispatch, SetStateAction } from "react";
+import { columnDefsNomina } from "../../static";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
-    columnDefs: any[];
     onRowSelected: Dispatch<SetStateAction<number | null>>
 }
 
-export function PivotTableEnc({ columnDefs, onRowSelected }: Props) {
+export function PivotTableNomina({ onRowSelected }: Props) {
 
     const { data } = useQuery({
         queryKey: ["nomina"],
@@ -43,7 +43,7 @@ export function PivotTableEnc({ columnDefs, onRowSelected }: Props) {
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
             <AgGridReact
                 rowData={data ?? []}
-                columnDefs={columnDefs}
+                columnDefs={columnDefsNomina}
                 rowSelection={{
                     mode: "singleRow",
                     enableClickSelection: true   // ⬅️ reemplazo oficial
