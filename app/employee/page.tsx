@@ -1,8 +1,8 @@
 "use client";
 import PivotTable from "@/src/components/molecules/PivotTable";
 import { useQuery } from "@tanstack/react-query";
-import { useCreateEmployee, useDeleteEmployee, useUpdateEmployee } from "./hooks/employee.hook";
 import { columnDefsEmployee } from "@/src/static/ColumnDefsTable";
+import { useCreateEmployee, useDeleteEmployee, useUpdateEmployee } from "@/src/hooks/employee.hook";
 
 export default function EmployeePage() {
 

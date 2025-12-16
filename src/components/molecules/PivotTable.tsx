@@ -7,23 +7,25 @@ import { AllCommunityModule } from "ag-grid-community";
 import type { GridApi } from "ag-grid-community";
 
 import { localeES } from "@/src/es/TextTablePivotSpanish";
-import { RowType } from "@/src/static/ColumnDefsTable";
+import { RowTypeEmployee } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
 import { Employee, EmployeeWithoutId } from "@/src/types/employee.type";
 import { UseMutationResult } from "@tanstack/react-query";
 import ModalForm from "./ModalForm";
 import { EditEmployeeForm } from "../organisms/EditEmployeForm";
 import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
+import { Concept } from "@/src/types/concept.type";
+import { CreateConceptForm } from "../organisms/CreateConceptForm";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
-    data: Employee[] ;
+    data: Employee[] | Concept[]
     columnDefs: any[];
-    createHooks?: UseMutationResult<unknown, Error, EmployeeWithoutId, unknown>
-    updateHooks?: UseMutationResult<unknown, Error, { id: number } & EmployeeWithoutId, unknown>
-    deleteHooks?: UseMutationResult<unknown, Error, number, unknown>
+    createHooks: UseMutationResult<unknown, Error, any, unknown>
+    updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>
+    deleteHooks: UseMutationResult<unknown, Error, number, unknown>
     entity: string;
 }
 
@@ -32,7 +34,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
 
     const [api, setApi] = useState<GridApi | null>(null);
 
-    const gridRef = useRef<AgGridReact<RowType>>(null);
+    const gridRef = useRef<AgGridReact<RowTypeEmployee>>(null);
 
     const [open, setOpen] = useState(false);
 
@@ -104,6 +106,31 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
         if (entity === "employee" && mode === "create") {
             return (
                 <CreateEmployeeForm
+                    onSubmit={(newData) => {
+                        createHooks.mutate(newData)
+                        //console.log("Empleado creado", newData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }
+
+        if (entity === "concept" && mode === "edit") {
+            return (
+                <EditEmployeeForm
+                    initialData={record!}
+                    onSubmit={(updatedData) => {
+                        updateHooks.mutate({ id: idSelected, ...updatedData })
+                        //console.log("Empleado actualizado", updatedData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }
+
+        if (entity === "concept" && mode === "create") {
+            return (
+                <CreateConceptForm
                     onSubmit={(newData) => {
                         createHooks.mutate(newData)
                         //console.log("Empleado creado", newData);
