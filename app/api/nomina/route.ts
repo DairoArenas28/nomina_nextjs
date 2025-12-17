@@ -69,7 +69,11 @@ export async function GET() {
     try {
         const db = await getDataSource();
         const nominaRepo = db.getRepository(Nomina);
-        const nominas = await nominaRepo.find();
+        const nominas = await nominaRepo.find({
+            order: {
+                period: "ASC"
+            }
+        });
         return NextResponse.json(nominas, { status: 200 });
     } catch (error) {
         console.error(error);

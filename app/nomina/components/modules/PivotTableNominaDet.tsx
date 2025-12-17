@@ -1,7 +1,7 @@
 'use client'
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { columnDefsNominaEnc } from "../../static";
+import { columnDefsNominaDet } from "../../static";
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -10,17 +10,28 @@ import { useMemo } from "react";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface NominaDetPageProps {
-    id: string;
+    selectedId: number;
 }
 
-export type RowTypeConceptoTree = {
-    id: number;
-    path: string[];           // jerarquía
-    concepto?: string;
+export type RowTypeNominaDet = {
+    id: number;          // jerarquía
+    code?: string;
+    description?: string;
     valor?: number;
     tipo?: "DEVENGADO" | "DEDUCIDO";
 };
 
+export interface NominaDetApi {
+    id: number;
+    concept: {
+        id: number;
+        code: string;
+        description: string;
+        type: string;
+    } | null;
+}
+
+/*
 const rowData: RowTypeConceptoTree[] = [
     // DEVENGADOS
     {
@@ -53,15 +64,15 @@ const rowData: RowTypeConceptoTree[] = [
         valor: 100000,
         tipo: "DEDUCIDO"
     }
-];
+];*/
 
 
-export function PivotTableNominaDet({ id }: NominaDetPageProps) {
+export function PivotTableNominaDet({ selectedId }: NominaDetPageProps) {
 
-    const { data } = useQuery({
-        queryKey: ["nomina-enc", id],
+    const { data } = useQuery<NominaDetApi[]>({
+        queryKey: ["nomina-det", selectedId],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:3000/api/nomina/${id}`, { cache: "no-store" });
+            const res = await fetch(`http://localhost:3000/api/nominaEnc/${selectedId}`, { cache: "no-store" });
 
             if (!res.ok) {
                 throw new Error("Error en la API");
@@ -69,46 +80,29 @@ export function PivotTableNominaDet({ id }: NominaDetPageProps) {
             const json = await res.json();
             return json;
         },
+        enabled: !!selectedId,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 2
     })
 
-    /*const rowData = useMemo<RowTypeNominaEnc[]>(() => {
+    const rowData = useMemo<RowTypeNominaDet[]>(() => {
         if (!data) return [];
 
-        return data.map((item: any) => ({
-            id: item.id,
-            code: item.code,
-            employeeName: item.employee?.name ?? "",
-            documentNumber: item.employee?.documentNumber ?? "",
-            position: item.employee?.position ?? "",
-            accrual: item.accrual,
-            deducted: item.deducted,
-            total: item.total
+        return data.map((item) => ({
+            id: item.id,          // jerarquía
+            code: item.concept?.code,
+            description: item.concept?.description,
+            type: item.concept?.type
+
         }));
-    }, [data]);*/
+    }, [data]);
 
     return (
         <div className="ag-theme-quartz" style={{ height: 300, width: "100%" }}>
-            <AgGridReact<RowTypeConceptoTree>
+            <AgGridReact
                 rowData={rowData}
-                treeData={true}
-                getDataPath={(data) => data.path}
-                groupDefaultExpanded={-1}
-                columnDefs={[
-                    { field: "concepto", headerName: "Concepto" },
-                    {
-                        field: "valor",
-                        headerName: "Valor",
-                        valueFormatter: (p) =>
-                            p.value
-                                ? p.value.toLocaleString("es-CO", {
-                                    style: "currency",
-                                    currency: "COP"
-                                })
-                                : ""
-                    }
-                ]}
+                columnDefs={columnDefsNominaDet}
+                localeText={localeES}
             />
         </div>
     )

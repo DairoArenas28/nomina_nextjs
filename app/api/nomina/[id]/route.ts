@@ -4,6 +4,9 @@ import { Nomina } from "@/src/entities/Nomina";
 import { getDataSource } from "@/src/lib/typeorm";
 import { NextResponse } from "next/server"
 import { formatConsecutive } from "@/src/utils/consecutive";
+import { NominaDet } from "@/src/entities/NominaDet";
+import { Concept } from "@/src/entities/Concept";
+import { NominaState } from "@/src/entities/enums";
 
 
 export async function GET(
@@ -32,9 +35,12 @@ export async function POST(
     const db = await getDataSource()
     const nominaRepo = db.getRepository(Nomina)
     const employeeRepo = db.getRepository(Employee)
+    const conceptRepo = db.getRepository(Concept)
     const nominaEncRepo = db.getRepository(NominaEnc)
+    const nominaDetRepo = db.getRepository(NominaDet)
 
-    const nomina = await nominaRepo.findBy({ id: Number(id) })
+    const nomina = await nominaRepo.findOneBy({ id: Number(id) })
+    const concept = await conceptRepo.find()
     const employees = await employeeRepo.find()
     const totalRegisterNominaEnc = await nominaEncRepo.count()
 
@@ -46,7 +52,7 @@ export async function POST(
         return NextResponse.json({ message: "No hay empleados para generar la nómina, verifica por favor" })
     }
 
-    employees.map((content) => {
+    employees.map(async (content) => {
         const newNominaEnc = new NominaEnc()
         newNominaEnc.code = formatConsecutive(totalRegisterNominaEnc + 1)
         newNominaEnc.hoursWorked = 23
@@ -55,8 +61,18 @@ export async function POST(
         newNominaEnc.nomina = { id: Number(id) } as Nomina
         newNominaEnc.employee = { id: content.id } as Employee
 
-        nominaEncRepo.save(newNominaEnc)
+        const savedNominaEnc = await nominaEncRepo.save(newNominaEnc)
+
+        concept.map((content) => {
+            const newNominaDet = new NominaDet()
+            newNominaDet.nominaEnc = {id: savedNominaEnc.id} as NominaEnc
+            newNominaDet.concept = {id: content.id} as Concept
+            nominaDetRepo.save(newNominaDet)
+        })
     })
+
+    nomina.state = NominaState.GENERADO
+    await nominaRepo.save(nomina)
 
     console.log(id);
 
