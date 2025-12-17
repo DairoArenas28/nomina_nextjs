@@ -16,12 +16,14 @@ import { EditEmployeeForm } from "../organisms/EditEmployeForm";
 import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
 import { Concept } from "@/src/types/concept.type";
 import { CreateConceptForm } from "../organisms/CreateConceptForm";
+import { EditConceptForm } from "../organisms/EditConceptForm";
+import Swal from "sweetalert2";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Props {
-    data: Employee[] | Concept[]
+    data: any[];
     columnDefs: any[];
     createHooks: UseMutationResult<unknown, Error, any, unknown>
     updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>
@@ -41,6 +43,16 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
     const [idSelected, setIdSelected] = useState(0)
 
     const [mode, setMode] = useState<"create" | "edit">("create");
+
+    const swalWithTailwind = Swal.mixin({
+        customClass: {
+            confirmButton:
+                "px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 font-medium mx-2 cursor-pointer",
+            cancelButton:
+                "px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-medium mx-2 cursor-pointer",
+        },
+        buttonsStyling: false,
+    });
 
     //console.log(data)
 
@@ -77,14 +89,64 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
     const handleDeleteSelected = () => {
         const selected = gridRef.current?.api.getSelectedRows() ?? [];
 
-        if (selected.length === 0) {
-            alert("Seleccione un registro");
-            return;
+        if (selected.length !== 0) {
+            swalWithTailwind
+                .fire({
+                    title: "¿Estas seguro de eliminar el registro?",
+                    text: "No podrás revertir esta acción.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, Eliminar",
+                    cancelButtonText: "No, Cancelar",
+                    reverseButtons: true,
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        const id = selected[0].id;
+                        //console.log("ID a eliminar:", id);
+                        deleteHooks.mutate(id, {
+                            onSuccess: () => {
+                                swalWithTailwind.fire({
+                                    title: "¡Registro Eliminado!",
+                                    icon: "success",
+                                });
+                            },
+                            onError: () => {
+                                swalWithTailwind.fire({
+                                    title: "Error",
+                                    text: "No se pudo eliminar el registro.",
+                                    icon: "error",
+                                });
+                            },
+                        });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithTailwind.fire({
+                            title: "Cancelado",
+                            text: "No se realizó ningún cambio.",
+                            icon: "error",
+                        });
+                    }
+                });
+
+
+        } else {
+            //throw new Error("Selecciona un periodo")
+            //console.log("Selecciona un periodo")
+            Swal.fire({
+                icon: "info",
+                title: "Oops...",
+                text: "Selecciona un registro!",
+                footer: ''
+            });
         }
 
-        const id = selected[0].id;
 
-        deleteHooks.mutate(id);
+
+
+
+
+
+
     };
 
     function FormResolver() {
@@ -117,7 +179,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
 
         if (entity === "concept" && mode === "edit") {
             return (
-                <EditEmployeeForm
+                <EditConceptForm
                     initialData={record!}
                     onSubmit={(updatedData) => {
                         updateHooks.mutate({ id: idSelected, ...updatedData })
