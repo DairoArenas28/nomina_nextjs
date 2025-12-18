@@ -1,5 +1,4 @@
 import { NominaDet } from "@/src/entities/NominaDet";
-import { NominaEnc } from "@/src/entities/NominaEnc";
 import { getDataSource } from "@/src/lib/typeorm";
 import { NextResponse } from "next/server";
 
