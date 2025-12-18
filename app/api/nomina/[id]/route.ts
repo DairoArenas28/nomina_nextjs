@@ -22,7 +22,8 @@ export async function GET(
         },
         relations: {
             employee: true
-        }
+        },
+        order: { code: "ASC" }
     });
     return NextResponse.json(nominaEnc);
 }
@@ -42,7 +43,7 @@ export async function POST(
     const nomina = await nominaRepo.findOneBy({ id: Number(id) })
     const concept = await conceptRepo.find()
     const employees = await employeeRepo.find()
-    const totalRegisterNominaEnc = await nominaEncRepo.count()
+    let totalRegisterNominaEnc = await nominaEncRepo.count()
 
     if (!nomina) {
         return NextResponse.json({ message: "Nómina no encontrada, verifica por favor" })
@@ -54,7 +55,8 @@ export async function POST(
 
     employees.map(async (content) => {
         const newNominaEnc = new NominaEnc()
-        newNominaEnc.code = formatConsecutive(totalRegisterNominaEnc + 1)
+        totalRegisterNominaEnc += 1
+        newNominaEnc.code = formatConsecutive(totalRegisterNominaEnc)
         newNominaEnc.hoursWorked = 23
         newNominaEnc.deducted = 20000
         newNominaEnc.accrual = 20000
