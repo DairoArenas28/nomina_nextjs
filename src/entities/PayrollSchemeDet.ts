@@ -8,6 +8,12 @@ export class PayrollSchemeDet {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column('decimal', {precision: 10, scale: 2})
+    value: number
+
+    @Column('decimal', {precision: 10, scale: 2})
+    hours: number
+
     @ManyToOne(() => PayrollSchemeEnc)
     @JoinColumn({ name: "payrollSchemeEnc_id" })
     payrollSchemeEnc: PayrollSchemeEnc

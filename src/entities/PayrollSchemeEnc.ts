@@ -15,13 +15,13 @@ export class PayrollSchemeEnc {
     @Column('varchar')
     payFrequency: string
 
-    @Column('decimal', {precision: 2, scale: 6})
+    @Column('decimal', {precision: 10, scale: 6})
     hoursPerDay: number
 
-    @Column('decimal', {precision: 2, scale: 6})
+    @Column('decimal', {precision: 10, scale: 6})
     workingDaysPerWeek: number
 
-    @Column('decimal', {precision: 3, scale: 6})
+    @Column('decimal', {precision: 10, scale: 6})
     totalHoursPeriod: number
 
     @Column('boolean')

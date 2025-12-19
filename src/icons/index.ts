@@ -1,6 +1,6 @@
 import { FaBeer, FaHome, FaHeart } from 'react-icons/fa'; // Importa los iconos que necesitas
 import { IconType } from 'react-icons'; // IconType es el tipo general para componentes de iconos
-import { IoHomeOutline, IoPersonOutline, IoCashOutline  } from 'react-icons/io5';
+import { IoHomeOutline, IoPersonOutline, IoCashOutline, IoDocumentTextOutline, IoExtensionPuzzleOutline  } from 'react-icons/io5';
 
 // Define un tipo para los iconos
 interface Iconos {
@@ -14,8 +14,9 @@ const iconos: Iconos = {
     homeOutline: IoHomeOutline,
     heart: FaHeart,
     personOutline: IoPersonOutline,
-    ioCashOutline: IoCashOutline  
-    
+    ioCashOutline: IoCashOutline,
+    ioDocumentTextOutline: IoDocumentTextOutline,
+    ioExtensionPuzzleOutline: IoExtensionPuzzleOutline
 };
 
 export default iconos;
