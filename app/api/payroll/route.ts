@@ -2,13 +2,18 @@ import { Concept } from "@/src/entities/Concept";
 import { PayrollSchemeDet } from "@/src/entities/PayrollSchemeDet";
 import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
 import { getDataSource } from "@/src/lib/typeorm";
+import { PayrollSchemeType } from "@/src/types/payroll.type";
 import { NextResponse } from "next/server";
-import { json } from "zod";
 
-
+export async function GET() {
+    const db =  await getDataSource()
+    const payrollSchemeEncRepo = db.getRepository(PayrollSchemeEnc)
+    const payrollSchemes = await payrollSchemeEncRepo.find()
+    return NextResponse.json(payrollSchemes)
+}
 
 export async function POST(request: Request) {
-    const body =  await request.json()
+    const body: PayrollSchemeType =  await request.json()
 
     const db = await getDataSource()
     const payrollSchemeEncRepo = db.getRepository(PayrollSchemeEnc)
@@ -38,6 +43,5 @@ export async function POST(request: Request) {
         await payrollSchemeDetRepo.save(newPayrollSchemeDet)
     })
     
-
     return NextResponse.json(payrollSchemeDetOnly)
 }

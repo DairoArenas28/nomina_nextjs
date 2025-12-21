@@ -28,7 +28,6 @@ export function CreateEmployeeForm({ onSubmit }: EditEmployeeFormProps) {
         accountNumber: "",
     });
 
-    // 👉 ESTE era el faltante
     const handleChange = (field: keyof EmployeeWithoutId, value: string) => {
         setFormData(prev => ({
             ...prev,

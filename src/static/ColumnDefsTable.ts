@@ -36,6 +36,19 @@ export type RowTypeConcept = {
 
 }
 
+export type RowTypePayrollScheme = {
+    id: number,
+    code: string,
+    description: string,
+    payFrequency: string,
+    hoursPerDay: number,
+    workingDaysPerWeek: number,
+    totalHoursPeriod: number,
+    hasVacation: boolean,
+    hasBonus: boolean,
+    hasLiquidation: boolean
+}
+
 
 export const columnDefsEmployee: ColDef<RowTypeEmployee>[] = [
     { headerName: "Nombre completo", field: "name", sortable: true, filter: true },
@@ -64,4 +77,16 @@ export const columnDefsConcept: ColDef<RowTypeConcept>[] = [
     { headerName: "Tipo Concepto", field: "type", sortable: true, filter: true },
     { headerName: "Tipo Valor", field: "value", sortable: true, filter: true },
 
+]
+
+export const columnDefsPayrollScheme: ColDef<RowTypePayrollScheme>[] = [
+    { headerName: "Código", field: "code", sortable: true, filter: true },
+    { headerName: "Descripción", field: "description", sortable: true, filter: true },
+    { headerName: "Frecuencia de pago", field: "payFrequency", sortable: true, filter: true },
+    { headerName: "Horas por día", field: "hoursPerDay", sortable: true, filter: true },
+    { headerName: "Días laborables por semana", field: "workingDaysPerWeek", sortable: true, filter: true },
+    { headerName: "Total horas por periodo", field: "totalHoursPeriod", sortable: true, filter: true },
+    { headerName: "Tiene vacaciones", field: "hasVacation", sortable: true, filter: true },
+    { headerName: "Tiene bonificación", field: "hasBonus", sortable: true, filter: true },
+    { headerName: "Tiene liquidación", field: "hasLiquidation", sortable: true, filter: true },
 ]

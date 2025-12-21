@@ -18,6 +18,7 @@ import { Concept } from "@/src/types/concept.type";
 import { CreateConceptForm } from "../organisms/CreateConceptForm";
 import { EditConceptForm } from "../organisms/EditConceptForm";
 import Swal from "sweetalert2";
+import { CreatePayrollForm } from "../organisms/CreatePayrollForm";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -196,6 +197,18 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                     onSubmit={(newData) => {
                         createHooks.mutate(newData)
                         //console.log("Empleado creado", newData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }
+
+        if (entity === "payroll" && mode === "create") {
+            return (
+                <CreatePayrollForm
+                    onSubmit={(newData) => {
+                        //createHooks.mutate(newData)
+                        console.log("Empleado creado", newData);
                         setOpen(false);
                     }}
                 />
