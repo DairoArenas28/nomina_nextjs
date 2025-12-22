@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { NominaEnc } from "./NominaEnc";
+import { PayrollSchemeEnc } from "./PayrollSchemeEnc";
 
 @Entity()
 export class Employee {
@@ -63,4 +64,7 @@ export class Employee {
 
     //@OneToMany(() => NominaEnc, (nominaEnc) => nominaEnc.employee)
     //nominaEnc: NominaEnc[]
+    @ManyToOne(() => PayrollSchemeEnc)
+    @JoinColumn({ name: "PayrollSchemeEnc_id" })
+    payrollSchemeEnc: PayrollSchemeEnc; 
 }

@@ -29,7 +29,7 @@ export default function EmployeePage() {
     gcTime: 1000 * 60 * 60 * 2
   });
   
-  //console.log(data)
+  console.log(data)
   return (
 
     <div className="flex w-full items-center justify-center font-sans dark:bg-black bg-gray-300">

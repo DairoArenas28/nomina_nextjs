@@ -1,4 +1,6 @@
+import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
 import { EmployeeWithoutId } from "@/src/types/employee.type";
+import { useQuery } from "@tanstack/react-query";
 
 interface EditEmployeeFieldsProps {
   data?: EmployeeWithoutId;
@@ -6,6 +8,17 @@ interface EditEmployeeFieldsProps {
 }
 
 export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
+
+  const { data: payrollSchemes } = useQuery<PayrollSchemeEnc[]>({
+    queryKey: ["payrollSchemes"],
+    queryFn: async () => {
+      const res = await fetch("/api/payroll");
+      return res.json();
+    }
+  });
+
+  console.log(payrollSchemes);
+
   return (
     <div className="max-h-[600px] overflow-y-auto p-3 space-y-6">
 
@@ -151,6 +164,23 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
               onChange={(e) => onChange?.("salary", e.target.value)}
               className="border p-2 rounded w-full"
             />
+          </div>
+
+          {/* Plantilla */}
+          <div>
+            <label className="font-semibold">Plantilla</label>
+            <select
+              value={data?.payrollSchemeEnc_id ?? ""}
+              onChange={(e) => onChange?.("payrollSchemeEnc_id", e.target.value)}
+              className="border p-2 rounded w-full"
+            >
+              <option value="">Seleccione una plantilla</option>
+              {payrollSchemes?.map((scheme) => (
+                <option key={scheme.id} value={scheme.id}>
+                  {scheme.description}
+                </option>
+              ))}
+            </select>
           </div>
 
         </div>

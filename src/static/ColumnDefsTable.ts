@@ -12,6 +12,7 @@ export type RowTypeEmployee = {
     phone: string;
     email: string;
 
+    payrollSchemeEncDescription: string;
     hireDate: string;
     contractType: string;
     position: string;
@@ -59,6 +60,7 @@ export const columnDefsEmployee: ColDef<RowTypeEmployee>[] = [
     { headerName: "Dirección del empleado", field: "address", sortable: true, filter: true },
     { headerName: "Teléfono", field: "phone", sortable: true, filter: true },
     { headerName: "Correo electrónico", field: "email", sortable: true, filter: true },
+    { headerName: "Frecuencia de pago", field: "payrollSchemeEncDescription", sortable: true, filter: true },
     { headerName: "Fecha de ingreso", field: "hireDate", sortable: true, filter: true },
     { headerName: "Tipo de contrato", field: "contractType", sortable: true, filter: true },
     { headerName: "Cargo del empleado", field: "position", sortable: true, filter: true },
