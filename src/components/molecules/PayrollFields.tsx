@@ -1,7 +1,15 @@
-import { PayrollSchemeType } from "@/src/types/payroll.type";
+'use client'
+import { PayrollSchemeTypeExtend } from "@/src/types/payroll.type";
+import { DataEntryTable } from "./DataEntryTable";
+import { columnDefsPayrollSchemeDet } from "@/src/static/ColumnDefsTable";
 
 
-export function PayrollFields({ data, onChange }: { data: PayrollSchemeType; onChange: (field: keyof PayrollSchemeType, value: any) => void }) {
+export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExtend; onChange: (field: keyof PayrollSchemeTypeExtend, value: any) => void }) {
+
+    const payrollSchemeDet = data.payrollSchemeDet
+    console.log(data)
+    console.log(payrollSchemeDet)
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -18,8 +26,8 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeType; onC
                 <label className="font-semibold">Descripción</label>
                 <input
                     type="text"
-                    value={data.code}
-                    onChange={(e) => onChange("code", e.target.value)}
+                    value={data.description}
+                    onChange={(e) => onChange("description", e.target.value)}
                     className="border p-2 rounded w-full"
                 />
             </div>
@@ -93,6 +101,37 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeType; onC
                     placeholder="Liquidación"
                     className="border p-2 rounded w-full"
                 />
+            </div>
+
+            <div className="col-span-3">
+                <DataEntryTable
+                    rowData={payrollSchemeDet}
+                    columnDefs={columnDefsPayrollSchemeDet}
+                    height={350}
+                    startEditColKey="concept_code"
+                    triggerField="concept_code"
+                    createEmptyRow={() => ({
+                        concept_id: 0,
+                        concept_code: '',
+                        concept_description: '',
+                        value: 0,
+                        hours: 0
+                    })}
+                    onTrigger={async (code, params) => {
+                        const res = await fetch(`/api/concept/by-code/${code}`);
+                        const concept = await res.json();
+                        console.log("COncepto: ", concept)
+                        if (!concept) return;
+
+                        params.node.setDataValue('concept_id', concept.id);
+                        params.node.setDataValue('concept_code', concept.code);
+                        params.node.setDataValue('concept_description', concept.description);
+                    }}
+                    onRowsChange={(rows) => {
+                        onChange("payrollSchemeDet", rows);
+                    }}
+                />
+
             </div>
         </div>
     );

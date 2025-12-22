@@ -50,6 +50,14 @@ export type RowTypePayrollScheme = {
     hasLiquidation: boolean
 }
 
+export type RowTypePayrollSchemeDet = {
+    concept_id: number,
+    concept_code: string,
+    concept_description: string,
+    value: number,
+    hours: number
+}
+
 
 export const columnDefsEmployee: ColDef<RowTypeEmployee>[] = [
     { headerName: "Nombre completo", field: "name", sortable: true, filter: true },
@@ -91,4 +99,12 @@ export const columnDefsPayrollScheme: ColDef<RowTypePayrollScheme>[] = [
     { headerName: "Tiene vacaciones", field: "hasVacation", sortable: true, filter: true },
     { headerName: "Tiene bonificación", field: "hasBonus", sortable: true, filter: true },
     { headerName: "Tiene liquidación", field: "hasLiquidation", sortable: true, filter: true },
+]
+
+export const columnDefsPayrollSchemeDet: ColDef<RowTypePayrollSchemeDet>[] = [
+    { headerName: "Id", field: "concept_id", sortable: true, filter: true, hide: true },
+    { headerName: "Código", field: "concept_code", sortable: true, filter: true, editable: true },
+    { headerName: "Descripción", field: "concept_description", sortable: true, filter: true, editable: false },
+    { headerName: "Valor", field: "value", sortable: true, filter: true, editable: true },
+    { headerName: "Hora", field: "hours", sortable: true, filter: true, editable: true },
 ]

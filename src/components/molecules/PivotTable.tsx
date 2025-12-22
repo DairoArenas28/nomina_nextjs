@@ -9,12 +9,10 @@ import type { GridApi } from "ag-grid-community";
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { RowTypeEmployee } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
-import { Employee, EmployeeWithoutId } from "@/src/types/employee.type";
 import { UseMutationResult } from "@tanstack/react-query";
 import ModalForm from "./ModalForm";
 import { EditEmployeeForm } from "../organisms/EditEmployeForm";
 import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
-import { Concept } from "@/src/types/concept.type";
 import { CreateConceptForm } from "../organisms/CreateConceptForm";
 import { EditConceptForm } from "../organisms/EditConceptForm";
 import Swal from "sweetalert2";
@@ -207,7 +205,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
             return (
                 <CreatePayrollForm
                     onSubmit={(newData) => {
-                        //createHooks.mutate(newData)
+                        createHooks.mutate(newData)
                         console.log("Empleado creado", newData);
                         setOpen(false);
                     }}

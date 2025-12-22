@@ -19,10 +19,18 @@ const PayrollSchemeDet = object({
     hours: z.number()
 })
 
+const PayrollSchemeDetExtend = PayrollSchemeDet.extend({concept_code: z.string(), concept_description: z.string()})
+
 export const PayrollScheme = object({
     ...PayrollSchemeEnc.shape,
     payrollSchemeDet: z.array(PayrollSchemeDet)
 })
 
+export const PayrollSchemeExtend = object({
+    ...PayrollSchemeEnc.shape,
+    payrollSchemeDet: z.array(PayrollSchemeDetExtend)
+})
+
 export type PayrollSchemeType = z.infer<typeof PayrollScheme>;
+export type PayrollSchemeTypeExtend = z.infer<typeof PayrollSchemeExtend>;
 

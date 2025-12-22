@@ -7,6 +7,7 @@ export function useCreatePayroll() {
     return useMutation({
         mutationKey: ["payroll-create"],
         mutationFn: async (payrollScheme: PayrollSchemeType) => {
+            console.log(payrollScheme)
             const res = await fetch("http://localhost:3000/api/payroll", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

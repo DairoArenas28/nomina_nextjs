@@ -31,7 +31,7 @@ export function CreateConceptForm({ onSubmit }: EditFormProps) {
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
             <ConceptFields data={formData} onChange={handleChange} />
 
-            <button className="bg-blue-600 text-white px-4 py-2 rounded">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
                 Guardar cambios
             </button>
         </form>
