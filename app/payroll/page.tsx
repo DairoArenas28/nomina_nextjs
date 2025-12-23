@@ -3,7 +3,7 @@ import PivotTable from "@/src/components/molecules/PivotTable";
 import { columnDefsPayrollScheme } from "@/src/static/ColumnDefsTable";
 import { useCreatePayroll, useDeletePayroll, useUpdatePayroll } from "./hooks/payroll.hook";
 import { useQuery } from "@tanstack/react-query";
-import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
+import { PayrollSchemeType } from "@/src/types/payroll.type";
 
 
 export default function PayrollPage() {
@@ -12,7 +12,7 @@ export default function PayrollPage() {
     const updateMutation = useUpdatePayroll()
     const deleteMutation = useDeletePayroll()
 
-    const { data } = useQuery<PayrollSchemeEnc[]>({
+    const { data } = useQuery<PayrollSchemeType[]>({
         queryKey: ["payroll"],
         queryFn: async () => {
             const res = await fetch("http://localhost:3000/api/payroll", { cache: "no-store" })
@@ -25,6 +25,8 @@ export default function PayrollPage() {
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 2
     })
+
+    console.log(data)
 
     return (
         <div className="flex w-full items-center justify-center font-sans dark:bg-black bg-gray-300 ">

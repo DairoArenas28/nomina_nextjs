@@ -8,7 +8,13 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const db =  await getDataSource()
     const payrollSchemeEncRepo = db.getRepository(PayrollSchemeEnc)
-    const payrollSchemes = await payrollSchemeEncRepo.find()
+    const payrollSchemes = await payrollSchemeEncRepo.find({
+        relations: {
+            payrollSchemeDet: {
+                concept: true
+            }
+        }
+    })
     return NextResponse.json(payrollSchemes)
 }
 

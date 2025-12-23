@@ -17,6 +17,7 @@ import { CreateConceptForm } from "../organisms/CreateConceptForm";
 import { EditConceptForm } from "../organisms/EditConceptForm";
 import Swal from "sweetalert2";
 import { CreatePayrollForm } from "../organisms/CreatePayrollForm";
+import { EditPayrollForm } from "../organisms/EditPayrollForm";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -207,6 +208,31 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                     onSubmit={(newData) => {
                         createHooks.mutate(newData)
                         console.log("Empleado creado", newData);
+                        setOpen(false);
+                    }}
+                />
+            );
+        }
+
+        if (entity === "payroll" && mode === "edit") {
+            console.log("Edit PivotTable", record);
+
+            const flattenedRecord = {
+                ...record,
+                payrollSchemeDet: record.payrollSchemeDet.map((det: any) => ({
+                    concept_id: det.concept?.id,
+                    concept_code: det.concept?.code,
+                    concept_description: det.concept?.description,
+                    hours: Number(det.hours),
+                    value: Number(det.value)
+                }))
+            };
+            return (
+                <EditPayrollForm
+                    initialData={flattenedRecord!}
+                    onSubmit={(updatedData) => {
+                        //updateHooks.mutate({ id: idSelected, ...updatedData })
+                        //console.log("Empleado actualizado", updatedData);
                         setOpen(false);
                     }}
                 />
