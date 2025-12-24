@@ -1,6 +1,7 @@
+'use client'
 import { PayrollSchemeType, PayrollSchemeTypeExtend } from "@/src/types/payroll.type"
 import { PayrollFields } from "../molecules/PayrollFields"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface EditFormProps {
     initialData: PayrollSchemeTypeExtend,
@@ -9,13 +10,14 @@ interface EditFormProps {
 
 export function EditPayrollForm({ initialData, onSubmit }: EditFormProps) {
 
-    if (!initialData) {
-        return <div>Selecciona una plantilla</div>;
-    }
-
     const [formData, setFormData] = useState<PayrollSchemeTypeExtend>(initialData);
 
-    const handleChange = (field: keyof PayrollSchemeTypeExtend, value: string) => {
+    // 🔥 sincroniza cuando cambie el registro a editar
+    useEffect(() => {
+        setFormData(initialData);
+    }, [initialData]);
+
+    const handleChange = (field: keyof PayrollSchemeTypeExtend, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -25,7 +27,10 @@ export function EditPayrollForm({ initialData, onSubmit }: EditFormProps) {
     };
     return (
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
-            <PayrollFields data={initialData} onChange={handleChange} />
+            <PayrollFields data={formData} onChange={handleChange} />
+            <button className="bg-blue-600 text-white mt-12 px-4 py-2 rounded w-full cursor-pointer">
+                Guardar cambios
+            </button>
         </form>
     )
 }

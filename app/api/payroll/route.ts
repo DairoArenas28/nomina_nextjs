@@ -13,6 +13,9 @@ export async function GET() {
             payrollSchemeDet: {
                 concept: true
             }
+        },
+        order: {
+            id: "ASC"
         }
     })
     return NextResponse.json(payrollSchemes)

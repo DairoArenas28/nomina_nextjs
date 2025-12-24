@@ -7,8 +7,8 @@ import { columnDefsPayrollSchemeDet } from "@/src/static/ColumnDefsTable";
 export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExtend; onChange: (field: keyof PayrollSchemeTypeExtend, value: any) => void }) {
 
     const payrollSchemeDet = data.payrollSchemeDet
-    console.log(data)
-    console.log(payrollSchemeDet)
+    //console.log(data)
+    //console.log(payrollSchemeDet)
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -48,16 +48,16 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
                 <input
                     type="number"
                     value={data.hoursPerDay}
-                    onChange={(e) => onChange("hoursPerDay", e.target.value)}
+                    onChange={(e) => onChange("hoursPerDay", Number(e.target.value))}
                     className="border p-2 rounded w-full"
                 />
             </div>
             <div>
                 <label className="font-semibold">Días a la semana</label>
                 <input
-                    type="text"
+                    type="number"
                     value={data.workingDaysPerWeek}
-                    onChange={(e) => onChange("workingDaysPerWeek", e.target.value)}
+                    onChange={(e) => onChange("workingDaysPerWeek", Number(e.target.value))}
                     className="border p-2 rounded w-full"
                 />
             </div>
@@ -65,9 +65,9 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
             <div>
                 <label className="font-semibold">Días mensuales</label>
                 <input
-                    type="text"
+                    type="number"
                     value={data.workingDaysPerMonth}
-                    onChange={(e) => onChange("workingDaysPerMonth", e.target.value)}
+                    onChange={(e) => onChange("workingDaysPerMonth", Number(e.target.value))}
                     className="border p-2 rounded w-full"
                 />
             </div>
@@ -75,9 +75,9 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
             <div>
                 <label className="font-semibold">Total Horas</label>
                 <input
-                    type="text"
+                    type="number"
                     value={data.totalHoursPeriod}
-                    onChange={(e) => onChange("totalHoursPeriod", e.target.value)}
+                    onChange={(e) => onChange("totalHoursPeriod", Number(e.target.value))}
                     className="border p-2 rounded w-full"
                 />
             </div>

@@ -78,8 +78,8 @@ export function DataEntryTable<T>({
 
     return (
         <div
-            className="ag-theme-quartz w-full"
-            style={{ height, width: "100%" }}
+            className="ag-theme-quartz "
+            style={{ height: 300, width: "100%" }}
         >
             <div className="flex justify-end">
                 <button

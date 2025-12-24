@@ -4,12 +4,12 @@ import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry } from "ag-grid-community";
 import { AllCommunityModule } from "ag-grid-community";
 
-import type { GridApi } from "ag-grid-community";
+import type { ColDef, ColGroupDef, GridApi } from "ag-grid-community";
 
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { RowTypeEmployee } from "@/src/static/ColumnDefsTable";
 import { useRef, useState } from "react";
-import { UseMutationResult } from "@tanstack/react-query";
+import { QueryObserverResult, UseMutationResult } from "@tanstack/react-query";
 import ModalForm from "./ModalForm";
 import { EditEmployeeForm } from "../organisms/EditEmployeForm";
 import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
@@ -22,21 +22,25 @@ import { EditPayrollForm } from "../organisms/EditPayrollForm";
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-interface Props {
+export interface PivotTableProps {
     data: any[];
     columnDefs: any[];
-    createHooks: UseMutationResult<unknown, Error, any, unknown>
-    updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>
-    deleteHooks: UseMutationResult<unknown, Error, number, unknown>
+
+    onRefetch: () => Promise<QueryObserverResult<any[], Error>>;
+    isFetching: boolean;
+
+    createHooks: UseMutationResult<unknown, Error, any, unknown>;
+    updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>;
+    deleteHooks: UseMutationResult<unknown, Error, number, unknown>;
+
     entity: string;
 }
 
-
-export default function PivotTable({ data, columnDefs, createHooks, updateHooks, deleteHooks, entity }: Props) {
+export default function PivotTable({ data, columnDefs, onRefetch, isFetching ,createHooks, updateHooks, deleteHooks, entity }: PivotTableProps) {
 
     const [api, setApi] = useState<GridApi | null>(null);
 
-    const gridRef = useRef<AgGridReact<RowTypeEmployee>>(null);
+    const gridRef = useRef<AgGridReact<any>>(null);
 
     const [open, setOpen] = useState(false);
 
@@ -139,14 +143,6 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                 footer: ''
             });
         }
-
-
-
-
-
-
-
-
     };
 
     function FormResolver() {
@@ -231,8 +227,9 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                 <EditPayrollForm
                     initialData={flattenedRecord!}
                     onSubmit={(updatedData) => {
-                        //updateHooks.mutate({ id: idSelected, ...updatedData })
-                        //console.log("Empleado actualizado", updatedData);
+                        console.log("PivotTable", updatedData)
+                        updateHooks.mutate({ id: idSelected, ...updatedData })
+                        console.log("Empleado actualizado", updatedData);
                         setOpen(false);
                     }}
                 />
@@ -247,7 +244,7 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
 
             <div className="flex mb-3 flex-row justify-between">
-                <div>
+                <div className="flex gap-2">
                     <button
                         onClick={() => api?.exportDataAsCsv({
                             fileName: entity + ".csv",
@@ -257,6 +254,14 @@ export default function PivotTable({ data, columnDefs, createHooks, updateHooks,
                         className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
                     >
                         Exportar a Excel
+                    </button>
+
+                    <button
+                        onClick={async ()=> onRefetch()}
+                        className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
+                        disabled={isFetching}
+                    >
+                        {isFetching ? "Cargando...." : "Consultar"}
                     </button>
 
 

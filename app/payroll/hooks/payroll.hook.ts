@@ -41,7 +41,8 @@ export function useUpdatePayroll() {
         }
         ,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["payroll"] })
+            //queryClient.invalidateQueries({ queryKey: ["payroll"] })
+            //queryClient.refetchQueries({ queryKey: ["payroll"] })
         }
     })
 }
