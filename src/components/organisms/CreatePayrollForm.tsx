@@ -10,6 +10,7 @@ export function CreatePayrollForm({ onSubmit }: { onSubmit: (data: PayrollScheme
         payFrequency: "",
         hoursPerDay: 0,
         workingDaysPerWeek: 0,
+        workingDaysPerMonth: 0,
         totalHoursPeriod: 0,
         hasVacation: false,
         hasBonus: false,
@@ -40,7 +41,7 @@ const handleSubmit = (e: React.FormEvent) => {
 
 return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4">
-        <PayrollFields data={formData} setFormData= {setFormData} onChange={handleChange} />
+        <PayrollFields data={formData} onChange={handleChange} />
         <button className="bg-blue-600 text-white mt-12 px-4 py-2 rounded w-full cursor-pointer">
             Guardar cambios
         </button>

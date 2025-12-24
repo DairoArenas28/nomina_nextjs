@@ -23,6 +23,9 @@ export class PayrollSchemeEnc {
     workingDaysPerWeek: number;
 
     @Column('decimal', { precision: 10, scale: 6 })
+    workingDaysPerMonth: number;
+
+    @Column('decimal', { precision: 10, scale: 6 })
     totalHoursPeriod: number;
 
     @Column('boolean')

@@ -7,6 +7,7 @@ const PayrollSchemeEnc = object({
     payFrequency: z.string(),
     hoursPerDay: z.number(),
     workingDaysPerWeek: z.number(),
+    workingDaysPerMonth: z.number(),
     totalHoursPeriod: z.number(),
     hasVacation: z.boolean(),
     hasBonus: z.boolean(),

@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const db = await getDataSource();
 const employeeRepo = db.getRepository(Employee);
+const payrollSchemeEncRepo = db.getRepository(PayrollSchemeEnc);
 /*export async function GET(request: NextRequest) {
     try {
         const content = await fs.readFileSync(filePath, "utf-8")
@@ -75,18 +76,38 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
+        const body = await req.json();
 
-        const body = await req.json()
+        const payrollSchemeEnc = await payrollSchemeEncRepo.findOneBy({
+            id: body.payrollSchemeEnc_id
+        });
+
+        if (!payrollSchemeEnc) {
+            return NextResponse.json(
+                { error: "PayrollSchemeEnc not found" },
+                { status: 404 }
+            );
+        }
 
         const employee = employeeRepo.create({
             ...body,
-            payrollSchemeEnc: { id: body.payrollSchemeEnc_id } as PayrollSchemeEnc
-        })
+            valueDaySalary: body.salary / payrollSchemeEnc.workingDaysPerMonth,
+            valueHoursSalary: body.salary / payrollSchemeEnc.totalHoursPeriod,
+            payrollSchemeEnc
+        });
 
-        const saved = await employeeRepo.save(employee)
+        const saved = await employeeRepo.save(employee);
 
-        return NextResponse.json({ data: saved, message: "JSON replaced successfully" });
+        return NextResponse.json({
+            data: saved,
+            message: "Employee created successfully"
+        });
+
     } catch (error) {
-        return NextResponse.json({ error }, { status: 500 });
+        console.error(error);
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }

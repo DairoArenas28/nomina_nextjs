@@ -34,8 +34,8 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
             <div>
                 <label className="font-semibold">Frecuencia de pago</label>
                 <select
-                    value={data.code}
-                    onChange={(e) => onChange("code", e.target.value)}
+                    value={data.payFrequency}
+                    onChange={(e) => onChange("payFrequency", e.target.value)}
                     className="border p-2 rounded w-full"
                 >
                     <option value="weekly">Semanal</option>
@@ -61,6 +61,17 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
                     className="border p-2 rounded w-full"
                 />
             </div>
+
+            <div>
+                <label className="font-semibold">Días mensuales</label>
+                <input
+                    type="text"
+                    value={data.workingDaysPerMonth}
+                    onChange={(e) => onChange("workingDaysPerMonth", e.target.value)}
+                    className="border p-2 rounded w-full"
+                />
+            </div>
+
             <div>
                 <label className="font-semibold">Total Horas</label>
                 <input

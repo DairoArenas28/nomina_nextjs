@@ -33,6 +33,7 @@ export async function POST(request: Request) {
     newPayrollSchemeEnc.payFrequency = body.payFrequency
     newPayrollSchemeEnc.hoursPerDay = body.hoursPerDay
     newPayrollSchemeEnc.workingDaysPerWeek = body.workingDaysPerWeek
+    newPayrollSchemeEnc.workingDaysPerMonth = body.workingDaysPerMonth
     newPayrollSchemeEnc.totalHoursPeriod = body.totalHoursPeriod
     newPayrollSchemeEnc.hasVacation = body.hasVacation
     newPayrollSchemeEnc.hasBonus = body.hasBonus

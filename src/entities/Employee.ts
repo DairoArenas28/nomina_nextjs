@@ -44,6 +44,12 @@ export class Employee {
     @Column({ type: "decimal", precision: 12, scale: 2 })
     salary: number;
 
+    @Column('decimal',{ precision: 12, scale: 2, nullable: true })    
+    valueDaySalary: number;
+
+    @Column('decimal',{ precision: 12, scale: 2, nullable: true })   
+    valueHoursSalary: number;
+
     @Column({ length: 50 })
     eps: string;
 
