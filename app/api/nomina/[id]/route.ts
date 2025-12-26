@@ -18,6 +18,7 @@ export async function GET(
     const { id } = await context.params;
     const db = await getDataSource()
     const nominaEncRepo = db.getRepository(NominaEnc)
+
     const nominaEnc = await nominaEncRepo.find({
         where: {
             nomina: { id: Number(id) }
@@ -31,78 +32,108 @@ export async function GET(
 }
 
 export async function POST(
-    request: Request,
-    context: { params: Promise<{ id: string }> }
+  request: Request,
+  context: { params: Promise<{ id: string }> }
 ) {
+  try {
+
     const { id } = await context.params;
     const db = await getDataSource()
+
     const nominaRepo = db.getRepository(Nomina)
     const employeeRepo = db.getRepository(Employee)
     const payrollSchemeEncRepo = db.getRepository(PayrollSchemeEnc)
     const nominaEncRepo = db.getRepository(NominaEnc)
     const nominaDetRepo = db.getRepository(NominaDet)
 
+    let deductedNomina = 0
+    let accrualNomina = 0
+
     const nomina = await nominaRepo.findOneBy({ id: Number(id) })
+    if (!nomina) {
+      return NextResponse.json({ message: "Nómina no encontrada" }, { status: 404 })
+    }
 
     const employees = await employeeRepo.find({
-        relations: {
-            payrollSchemeEnc: true
-        }
+      relations: { payrollSchemeEnc: true }
     })
+
+    if (!employees.length) {
+      return NextResponse.json({ message: "No hay empleados" }, { status: 400 })
+    }
+
     let totalRegisterNominaEnc = await nominaEncRepo.count()
 
-    if (!nomina) {
-        return NextResponse.json({ message: "Nómina no encontrada, verifica por favor" })
-    }
+    for (const content of employees) {
 
-    if (!employees) {
-        return NextResponse.json({ message: "No hay empleados para generar la nómina, verifica por favor" })
-    }
+      let deductedNominaEnc = 0
+      let accrualNominaEnc = 0
 
-    employees.map(async (content) => {
+      console.log("Procesando empleado", content.id)
 
-        const payrollScheme = await payrollSchemeEncRepo.findOne({
-            where: {
-                id: content.payrollSchemeEnc.id
-            },
-            relations: {
-                payrollSchemeDet: {
-                    concept: true
-                }
-            }
-        });
+      const payrollScheme = await payrollSchemeEncRepo.findOne({
+        where: { id: content.payrollSchemeEnc.id },
+        relations: { payrollSchemeDet: { concept: true } }
+      })
 
-        if (!payrollScheme || !payrollScheme.payrollSchemeDet?.length) {
-            throw new Error(
-                `La plantilla ${content.payrollSchemeEnc.id} no tiene conceptos`
-            );
+      if (!payrollScheme?.payrollSchemeDet?.length) {
+        throw new Error(`La plantilla ${content.payrollSchemeEnc.id} no tiene conceptos`)
+      }
+
+      const newNominaEnc = new NominaEnc()
+      totalRegisterNominaEnc++
+      newNominaEnc.code = formatConsecutive(totalRegisterNominaEnc)
+      newNominaEnc.hoursWorked = payrollScheme.totalHoursPeriod / 2
+      newNominaEnc.nomina = { id: Number(id) } as Nomina
+      newNominaEnc.employee = { id: content.id } as Employee
+
+      const savedNominaEnc = await nominaEncRepo.save(newNominaEnc)
+
+      for (const item of payrollScheme.payrollSchemeDet) {
+
+        const total = item.hours
+          ? item.hours * content.valueHoursSalary
+          : item.value
+
+        if (item.concept.type === 'Deducido') {
+          deductedNominaEnc += total
+        } else {
+          accrualNominaEnc += total
         }
 
-        console.log("payroll", payrollScheme)
-        //return NextResponse.json({payrollScheme})
-        const newNominaEnc = new NominaEnc()
-        totalRegisterNominaEnc += 1
-        newNominaEnc.code = formatConsecutive(totalRegisterNominaEnc)
-        newNominaEnc.hoursWorked = 23
-        newNominaEnc.deducted = 20000
-        newNominaEnc.accrual = 20000
-        newNominaEnc.nomina = { id: Number(id) } as Nomina
-        newNominaEnc.employee = { id: content.id } as Employee
-
-        const savedNominaEnc = await nominaEncRepo.save(newNominaEnc)
-
-        payrollScheme.payrollSchemeDet.map(async (item) => {
-            const newNominaDet = new NominaDet()
-            newNominaDet.nominaEnc = { id: savedNominaEnc.id } as NominaEnc
-            newNominaDet.concept = { id: item.concept.id } as Concept
-            nominaDetRepo.save(newNominaDet)
+        await nominaDetRepo.save({
+          nominaEnc: savedNominaEnc,
+          concept: item.concept,
+          hours: item.hours,
+          value: item.value,
+          total
         })
-    })
+      }
+
+      savedNominaEnc.accrual = accrualNominaEnc
+      savedNominaEnc.deducted = deductedNominaEnc
+      savedNominaEnc.total = accrualNominaEnc - deductedNominaEnc
+
+      await nominaEncRepo.save(savedNominaEnc)
+
+      accrualNomina += accrualNominaEnc
+      deductedNomina += deductedNominaEnc
+    }
 
     nomina.state = NominaState.GENERADO
-    await nominaRepo.save(nomina)
-    console.log("Generar payroll", employees)
-    console.log(id);
+    nomina.accrual = accrualNomina
+    nomina.deducted = deductedNomina
+    nomina.total = accrualNomina - deductedNomina
 
-    return NextResponse.json({ employees });
+    await nominaRepo.save(nomina)
+
+    return NextResponse.json({ ok: true })
+
+  } catch (error: any) {
+    console.error("ERROR GENERANDO NÓMINA:", error)
+    return NextResponse.json(
+      { message: error.message },
+      { status: 500 }
+    )
+  }
 }

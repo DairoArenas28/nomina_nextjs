@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { NominaEnc } from "./NominaEnc";
 import { Concept } from "./Concept";
 
@@ -9,6 +9,15 @@ export class NominaDet {
 
     @PrimaryGeneratedColumn()
     id: number
+
+    @Column('decimal', { precision: 12, scale: 2 })
+    value: number
+
+    @Column('decimal', { precision: 12, scale: 2 })
+    hours: number
+
+    @Column('decimal', { precision: 12, scale: 2 })
+    total: number
 
     @ManyToOne(() => NominaEnc)
     @JoinColumn({name: "nominaEnc_id"})

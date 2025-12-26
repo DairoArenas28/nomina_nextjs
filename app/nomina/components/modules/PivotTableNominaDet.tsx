@@ -5,6 +5,7 @@ import { columnDefsNominaDet } from "../../static";
 import { localeES } from "@/src/es/TextTablePivotSpanish";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { totalmem } from "os";
 
 // Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -18,7 +19,7 @@ export type RowTypeNominaDet = {
     code?: string;
     description?: string;
     valor?: number;
-    tipo?: "DEVENGADO" | "DEDUCIDO";
+    tipo?: "Devengado" | "Deducido";
 };
 
 export interface NominaDetApi {
@@ -28,7 +29,11 @@ export interface NominaDetApi {
         code: string;
         description: string;
         type: string;
+
     } | null;
+    value: number;
+    hours: number;
+    total?: number;
 }
 
 /*
@@ -92,7 +97,10 @@ export function PivotTableNominaDet({ selectedId }: NominaDetPageProps) {
             id: item.id,          // jerarquía
             code: item.concept?.code,
             description: item.concept?.description,
-            type: item.concept?.type
+            value: item.value,
+            hours: item.hours,
+            type: item.concept?.type.trim() as "Devengado" | "Deducido",
+            total: item.total,
 
         }));
     }, [data]);
@@ -103,6 +111,15 @@ export function PivotTableNominaDet({ selectedId }: NominaDetPageProps) {
                 rowData={rowData}
                 columnDefs={columnDefsNominaDet}
                 localeText={localeES}
+                getRowStyle={(params) => {
+                    if (params.data?.type === 'Devengado') {
+                        return { backgroundColor: '#dcfce7' };
+                    }
+                    if (params.data?.type === 'Deducido') {
+                        return { backgroundColor: '#fee2e2' };
+                    }
+                    return undefined;
+                }}
             />
         </div>
     )
