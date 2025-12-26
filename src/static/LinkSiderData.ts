@@ -7,5 +7,5 @@ export const LinkSiderData = [
     {name: "Empledos", href:"/employee", icon: iconos.personOutline}, 
     {name: "Plantillas", href:"/payroll", icon: iconos.ioDocumentTextOutline}, 
     {name: "Conceptos", href:"/concept", icon: iconos.ioExtensionPuzzleOutline}, 
-    {name: "Products", href:""}
+    {name: "Configuraciones", href:"/config", icon: iconos.ioSettingsOutline} 
 ] 
