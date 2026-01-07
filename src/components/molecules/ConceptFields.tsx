@@ -8,23 +8,23 @@ interface ConceptFieldsProps {
 export function ConceptFields({ data, onChange }: ConceptFieldsProps) {
   return (
     <div className="max-h-[600px] overflow-y-auto p-3 space-y-6">
-      {/* === INFORMACIÓN PERSONAL === */}
       <section>
-        <h3 className="font-bold text-lg mb-2">Información Personal</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Nombre */}
+          {/* Código */}
           <div>
             <label className="font-semibold">Código</label>
             <input
+              name="code"
               value={data?.code ?? ""}
               onChange={(e) => onChange?.("code", e.target.value)}
               className="border p-2 rounded w-full"
             />
           </div>
-          {/* Edad */}
+          {/* Descripción */}
           <div>
             <label className="font-semibold">Descripción</label>
             <input
+              name="description"
               type="text"
               value={data?.description ?? ""}
               onChange={(e) => onChange?.("description", e.target.value)}
@@ -35,10 +35,12 @@ export function ConceptFields({ data, onChange }: ConceptFieldsProps) {
           <div>
             <label className="font-semibold">Tipo de concepto</label>
             <select
-              value={data?.type ?? ""}
+              value={data?.type}
+              name="type"
               onChange={(e) => onChange("type", e.target.value)}
               className="border p-2 rounded w-full cursor-pointer"
             >
+              <option value=""></option>
               <option value="Devengado">Devengado</option>
               <option value="Deducido">Deducido</option>
             </select>
@@ -47,10 +49,12 @@ export function ConceptFields({ data, onChange }: ConceptFieldsProps) {
           <div>
             <label className="font-semibold">Valor</label>
             <select
-              value={data?.value ?? ""}
+              value={data?.value}
+              name="value"
               onChange={(e) => onChange("value", e.target.value)}
               className="border p-2 rounded w-full cursor-pointer"
             >
+              <option value=""></option>
               <option value="Hours">Hora</option>
               <option value="Value">Valor</option>
             </select>

@@ -58,7 +58,7 @@ export function useDeleteEmployee() {
     return useMutation({
         mutationKey: ["employee-delete"],
         mutationFn: async (id: number) => {
-            console.log(id)
+            //console.log(id)
             const res = await fetch(`http://localhost:3000/api/employee/${id}`, {
                 method: "DELETE"
             })

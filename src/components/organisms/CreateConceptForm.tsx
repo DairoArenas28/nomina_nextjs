@@ -24,7 +24,7 @@ export function CreateConceptForm({ onSubmit }: EditFormProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(formData); // enviar el formulario al padre
+        onSubmit(formData); 
     };
 
     return (

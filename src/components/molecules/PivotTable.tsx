@@ -1,315 +1,173 @@
-"use client"
+"use client";
+
 import { AgGridReact } from "ag-grid-react";
-
-import { ModuleRegistry } from "ag-grid-community";
-import { AllCommunityModule } from "ag-grid-community";
-
-import type { ColDef, ColGroupDef, GridApi } from "ag-grid-community";
-
-import { localeES } from "@/src/es/TextTablePivotSpanish";
-import { RowTypeEmployee } from "@/src/static/ColumnDefsTable";
+import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import type { GridApi } from "ag-grid-community";
 import { useRef, useState } from "react";
-import { QueryObserverResult, UseMutationResult } from "@tanstack/react-query";
-import ModalForm from "./ModalForm";
-import { EditEmployeeForm } from "../organisms/EditEmployeForm";
-import { CreateEmployeeForm } from "../organisms/CreateEmployeeForm";
-import { CreateConceptForm } from "../organisms/CreateConceptForm";
-import { EditConceptForm } from "../organisms/EditConceptForm";
 import Swal from "sweetalert2";
-import { CreatePayrollForm } from "../organisms/CreatePayrollForm";
-import { EditPayrollForm } from "../organisms/EditPayrollForm";
+import ModalForm from "./ModalForm";
+import { localeES } from "@/src/es/TextTablePivotSpanish";
+import { QueryObserverResult, UseMutationResult } from "@tanstack/react-query";
+import { swalSuccess, swalError, swalConfirmDelete } from "@/src/lib/swal";
+import { FORM_MAP } from "@/src/config/form-map";
 
-// Registrar módulos
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-export interface PivotTableProps {
-    data: any[];
-    columnDefs: any[];
+export interface PivotTableProps { data: any[]; columnDefs: any[]; onRefetch: () => Promise<QueryObserverResult<any[], Error>>; isFetching: boolean; createHooks: UseMutationResult<unknown, Error, any, unknown>; updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>; deleteHooks: UseMutationResult<unknown, Error, number, unknown>; entity: string; }
 
-    onRefetch: () => Promise<QueryObserverResult<any[], Error>>;
-    isFetching: boolean;
-
-    createHooks: UseMutationResult<unknown, Error, any, unknown>;
-    updateHooks: UseMutationResult<unknown, Error, { id: number } & any, unknown>;
-    deleteHooks: UseMutationResult<unknown, Error, number, unknown>;
-
-    entity: string;
-}
-
-export default function PivotTable({ data, columnDefs, onRefetch, isFetching ,createHooks, updateHooks, deleteHooks, entity }: PivotTableProps) {
-
+export default function PivotTable({
+    data,
+    columnDefs,
+    onRefetch,
+    isFetching,
+    createHooks,
+    updateHooks,
+    deleteHooks,
+    entity,
+}: PivotTableProps) {
+    const gridRef = useRef<AgGridReact<any>>(null);
     const [api, setApi] = useState<GridApi | null>(null);
 
-    const gridRef = useRef<AgGridReact<any>>(null);
-
     const [open, setOpen] = useState(false);
-
-    const [idSelected, setIdSelected] = useState(0)
-
     const [mode, setMode] = useState<"create" | "edit">("create");
+    const [idSelected, setIdSelected] = useState<number | null>(null);
 
-    const swalWithTailwind = Swal.mixin({
-        customClass: {
-            confirmButton:
-                "px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 font-medium mx-2 cursor-pointer",
-            cancelButton:
-                "px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-medium mx-2 cursor-pointer",
-        },
-        buttonsStyling: false,
-    });
+    const getSelectedId = () => {
+        const selected = gridRef.current?.api.getSelectedRows() ?? [];
+        return selected.length ? selected[0].id : null;
+    };
 
-    //console.log(data)
-
-    const handleCreateSelected = () => {
-        //const selected = gridRef.current?.api.getSelectedRows() ?? [];
-        // ejemplo: obtener solo los nombres
-        //const id = selected.map((row) => row.id);
-
-        //deleteHooks.mutate(id[0])
-        //console.log("Seleccionados:", names);
+    const openCreate = () => {
         setMode("create");
         setOpen(true);
     };
 
-    const handleGetSelected = () => {
-        const selected = gridRef.current?.api.getSelectedRows() ?? [];
-        // ejemplo: obtener solo los nombres
-        const id = selected.map((row) => row.id);
-
-        deleteHooks.mutate(id[0])
-        //console.log("Seleccionados:", names);
-    };
-
-    const handleEditSelected = () => {
-        const selected = gridRef.current?.api.getSelectedRows() ?? [];
-        if (selected.length === 0) return alert("Seleccione un registro");
-
-        //updateHooks.reset();
-        setIdSelected(selected[0].id);
+    const openEdit = () => {
+        const id = getSelectedId();
+        if (!id) return Swal.fire("Seleccione un registro");
+        setIdSelected(id);
         setMode("edit");
         setOpen(true);
     };
 
-    const handleDeleteSelected = () => {
-        const selected = gridRef.current?.api.getSelectedRows() ?? [];
-
-        if (selected.length !== 0) {
-            swalWithTailwind
-                .fire({
-                    title: "¿Estas seguro de eliminar el registro?",
-                    text: "No podrás revertir esta acción.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Sí, Eliminar",
-                    cancelButtonText: "No, Cancelar",
-                    reverseButtons: true,
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        const id = selected[0].id;
-                        //console.log("ID a eliminar:", id);
-                        deleteHooks.mutate(id, {
-                            onSuccess: () => {
-                                swalWithTailwind.fire({
-                                    title: "¡Registro Eliminado!",
-                                    icon: "success",
-                                });
-                            },
-                            onError: () => {
-                                swalWithTailwind.fire({
-                                    title: "Error",
-                                    text: "No se pudo eliminar el registro.",
-                                    icon: "error",
-                                });
-                            },
-                        });
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        swalWithTailwind.fire({
-                            title: "Cancelado",
-                            text: "No se realizó ningún cambio.",
-                            icon: "error",
-                        });
-                    }
-                });
-
-
-        } else {
-            //throw new Error("Selecciona un periodo")
-            //console.log("Selecciona un periodo")
-            Swal.fire({
-                icon: "info",
-                title: "Oops...",
-                text: "Selecciona un registro!",
-                footer: ''
-            });
+    const deleteSelected = async () => {
+        const id = getSelectedId();
+        if (!id) {
+            Swal.fire("Seleccione un registro");
+            return;
         }
+
+        const result = await swalConfirmDelete();
+        if (!result.isConfirmed) return;
+
+        deleteHooks.mutate(id, {
+            onSuccess: () => swalSuccess("¡Registro Eliminado!"),
+            onError: () => swalError("No se pudo eliminar el registro"),
+        });
     };
 
-    function FormResolver() {
-        const record = data.find(x => x.id === idSelected);
-
-        if (entity === "employee" && mode === "edit") {
-            return (
-                <EditEmployeeForm
-                    initialData={record!}
-                    onSubmit={(updatedData) => {
-                        updateHooks.mutate({ id: idSelected, ...updatedData })
-                        //console.log("Empleado actualizado", updatedData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        if (entity === "employee" && mode === "create") {
-            return (
-                <CreateEmployeeForm
-                    onSubmit={(newData) => {
-                        createHooks.mutate(newData)
-                        //console.log("Empleado creado", newData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        if (entity === "concept" && mode === "edit") {
-            return (
-                <EditConceptForm
-                    initialData={record!}
-                    onSubmit={(updatedData) => {
-                        updateHooks.mutate({ id: idSelected, ...updatedData })
-                        //console.log("Empleado actualizado", updatedData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        if (entity === "concept" && mode === "create") {
-            return (
-                <CreateConceptForm
-                    onSubmit={(newData) => {
-                        createHooks.mutate(newData)
-                        //console.log("Empleado creado", newData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        if (entity === "payroll" && mode === "create") {
-            return (
-                <CreatePayrollForm
-                    onSubmit={(newData) => {
-                        createHooks.mutate(newData)
-                        console.log("Empleado creado", newData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        if (entity === "payroll" && mode === "edit") {
-            console.log("Edit PivotTable", record);
-
-            const flattenedRecord = {
-                ...record,
-                payrollSchemeDet: record.payrollSchemeDet.map((det: any) => ({
-                    concept_id: det.concept?.id,
-                    concept_code: det.concept?.code,
-                    concept_description: det.concept?.description,
-                    hours: Number(det.hours),
-                    value: Number(det.value)
-                }))
-            };
-            return (
-                <EditPayrollForm
-                    initialData={flattenedRecord!}
-                    onSubmit={(updatedData) => {
-                        console.log("PivotTable", updatedData)
-                        updateHooks.mutate({ id: idSelected, ...updatedData })
-                        console.log("Empleado actualizado", updatedData);
-                        setOpen(false);
-                    }}
-                />
-            );
-        }
-
-        // Puedes extender así con product, roles, etc.
-        return <div>No existe formulario para esta operación</div>;
-    }
+    const record = data.find((x) => x.id === idSelected);
+    const FormComponent = FORM_MAP[entity]?.[mode];
 
     return (
         <div className="ag-theme-quartz" style={{ height: 400, width: "100%" }}>
-
+            {/* Toolbar */}
             <div className="flex mb-3 flex-row justify-between">
                 <div className="flex gap-2">
                     <button
-                        onClick={() => api?.exportDataAsCsv({
-                            fileName: entity + ".csv",
-                            columnSeparator: ";",
-                            suppressQuotes: true
-                        })}
+                        onClick={() =>
+                            api?.exportDataAsCsv({
+                                fileName: `${entity}.csv`,
+                                columnSeparator: ";",
+                                suppressQuotes: true,
+                            })
+                        }
                         className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
                     >
-                        Exportar a Excel
+                        Exportar
                     </button>
 
                     <button
-                        onClick={async ()=> onRefetch()}
-                        className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
+                        onClick={onRefetch}
                         disabled={isFetching}
+                        className="p-2 bg-sky-600  text-white rounded-xl cursor-pointer"
                     >
-                        {isFetching ? "Cargando...." : "Consultar"}
+                        {isFetching ? "Cargando..." : "Consultar"}
                     </button>
-
-
                 </div>
-                <div className="flex gap-3">
+
+                <div className="flex gap-2">
                     <input
-                        type="text"
                         placeholder="Buscar..."
                         onChange={(e) =>
-                            gridRef.current?.api.setGridOption("quickFilterText", e.target.value)
+                            gridRef.current?.api.setGridOption(
+                                "quickFilterText",
+                                e.target.value
+                            )
                         }
                         className="p-2 rounded-xl bg-gray-200 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
 
-                    <button onClick={handleCreateSelected} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
+                    <button onClick={openCreate} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
                         Crear
                     </button>
 
-                    <button onClick={handleGetSelected} className="rounded-xl p-2 bg-green-600 text-white cursor-pointer">
-                        Visualizar
-                    </button>
-
-                    <button onClick={handleEditSelected} className="rounded-xl p-2 bg-blue-500 text-white cursor-pointer">
+                    <button onClick={openEdit} className="p-2 bg-blue-600 text-white rounded-xl cursor-pointer">
                         Editar
                     </button>
 
-                    <button onClick={handleDeleteSelected} className="rounded-xl p-2 bg-red-500 text-white cursor-pointer">
+                    <button onClick={deleteSelected} className="p-2 bg-red-600 text-white rounded-xl cursor-pointer">
                         Eliminar
                     </button>
                 </div>
             </div>
 
+            {/* Grid */}
             <AgGridReact
                 ref={gridRef}
-                rowSelection={{
-                    mode: "multiRow",
-                    enableClickSelection: true   // ⬅️ reemplazo oficial
-                }}
                 rowData={data}
-                localeText={localeES}
                 columnDefs={columnDefs}
-                onGridReady={(params) => setApi(params.api)}
-                pagination={true}
+                localeText={localeES}
+                pagination
+                rowSelection={{ mode: "multiRow", enableClickSelection: true }}
+                onGridReady={(p) => setApi(p.api)}
             />
 
+            {/* Modal */}
             <ModalForm isOpen={open} onClose={() => setOpen(false)}>
-                <FormResolver />
+                {FormComponent ? (
+                    <FormComponent
+                        initialData={record}
+                        onSubmit={(payload: any) => {
+                            const mutate =
+                                mode === "create"
+                                    ? createHooks.mutate
+                                    : updateHooks.mutate;
+
+                            mutate(
+                                mode === "edit"
+                                    ? { id: idSelected, ...payload }
+                                    : payload,
+                                {
+                                    onSuccess: () =>
+                                        swalSuccess(
+                                            mode === "create"
+                                                ? "¡Registro Creado!"
+                                                : "¡Registro Actualizado!"
+                                        ),
+                                    onError: () =>
+                                        swalError("No se pudo completar la operación"),
+                                }
+                            );
+
+                            setOpen(false);
+                        }}
+                    />
+                ) : (
+                    <div>No existe formulario para esta entidad</div>
+                )}
             </ModalForm>
         </div>
     );
 }
+

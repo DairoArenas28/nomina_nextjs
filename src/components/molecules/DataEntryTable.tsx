@@ -37,6 +37,8 @@ export function DataEntryTable<T>({
     height = 400
 }: DataEntryTableProps<T>) {
 
+    console.log("DataEntryTable render", rowData);
+
     const gridRef = useRef<AgGridReact>(null);
 
     const emitRows = () => {
@@ -68,12 +70,20 @@ export function DataEntryTable<T>({
     };
 
     const onCellEditingStopped = async (params: any) => {
-        if (triggerField && onTrigger && params.colDef.field === triggerField && params.value) {
+        if (params.oldValue === params.value) return;
+
+        if (
+            triggerField &&
+            onTrigger &&
+            params.colDef.field === triggerField &&
+            params.value
+        ) {
             await onTrigger(params.value, params);
         }
 
-        emitRows();  // ✅ sincroniza estado
+        emitRows();
     };
+
 
 
     return (

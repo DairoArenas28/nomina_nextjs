@@ -1,6 +1,8 @@
 import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
 import { EmployeeWithoutId } from "@/src/types/employee.type";
 import { useQuery } from "@tanstack/react-query";
+import { Country, State, City } from 'country-state-city';
+import { LocationSelector } from "../organisms/LocationSelector/LocationSelector";
 
 interface EditEmployeeFieldsProps {
   data?: EmployeeWithoutId;
@@ -76,13 +78,28 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
             />
           </div>
 
-          {/* País */}
+          {/* País 
           <div>
             <label className="font-semibold">País</label>
             <input
               value={data?.country ?? ""}
               onChange={(e) => onChange?.("country", e.target.value)}
               className="border p-2 rounded w-full"
+            />
+          </div>*/}
+
+          <div className="md:col-span-2">
+            <LocationSelector
+              value={{
+                country: data?.country ?? '',
+                state: data?.state ?? '',
+                city: data?.city ?? ''
+              }}
+              onChange={(location) => {
+                onChange?.('country', location.country);
+                onChange?.('state', location.state);
+                onChange?.('city', location.city);
+              }}
             />
           </div>
 

@@ -20,7 +20,7 @@ export function CreateNominaForm() {
             return;
         }
 
-        console.log({ year, month });
+        //console.log({ year, month });
 
         createMutation.mutate({  year: String(year), month: String(month) } );
     };

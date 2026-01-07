@@ -23,6 +23,12 @@ export class Employee {
     @Column({ length: 100 })
     country: string;
 
+    @Column({ length: 100 })
+    state: string;
+
+    @Column({ length: 100 })
+    city: string;
+
     @Column({ length: 200 })
     address: string;
 

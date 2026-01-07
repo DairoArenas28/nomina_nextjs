@@ -8,6 +8,8 @@ export type RowTypeEmployee = {
     documentType: string;
     documentNumber: string;
     country: string;
+    state: string;
+    city: string;
     address: string;
     phone: string;
     email: string;
@@ -65,6 +67,8 @@ export const columnDefsEmployee: ColDef<RowTypeEmployee>[] = [
     { headerName: "Tipo de documento", field: "documentType", sortable: true, filter: true },
     { headerName: "Número del documento", field: "documentNumber", sortable: true, filter: true },
     { headerName: "País de residencia", field: "country", sortable: true, filter: true },
+    { headerName: "Departamento", field: "state", sortable: true, filter: true },
+    { headerName: "Ciudad", field: "city", sortable: true, filter: true },
     { headerName: "Dirección del empleado", field: "address", sortable: true, filter: true },
     { headerName: "Teléfono", field: "phone", sortable: true, filter: true },
     { headerName: "Correo electrónico", field: "email", sortable: true, filter: true },

@@ -7,6 +7,8 @@ export const EmployeeSchema = z.object({
     documentType: z.string(),
     documentNumber: z.string(),
     country: z.string(),
+    state: z.string().optional().default(""),
+    city: z.string().optional().default(""),
     address: z.string(),
     phone: z.string(),
     email: z.string().email(),

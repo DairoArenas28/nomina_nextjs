@@ -59,7 +59,7 @@ export function useDeleteConcept() {
     return useMutation({
         mutationKey: ["concept-delete"],
         mutationFn: async (id: number) => {
-            console.log(id)
+            //console.log(id)
             const res = await fetch(`http://localhost:3000/api/concept/${id}`, {
                 method: "DELETE"
             })

@@ -1,21 +1,33 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ConceptType } from "./enums";
-
+import { CalculationBase, CalculationType, ConceptType } from "./enums";
 
 @Entity()
 export class Concept {
+
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @Column('varchar')
-    code: string
+    @Column({ length: 50, unique: true })
+    code: string;
 
-    @Column('varchar')
-    description: string
+    @Column({ length: 150 })
+    description: string;
 
-    @Column({type: 'enum', enum: ConceptType})
-    type: string
+    @Column({ type: 'enum', enum: ConceptType })
+    type: ConceptType;
 
-    @Column('varchar')
-    value: string
+    @Column({ type: 'enum', enum: CalculationType })
+    calculationType: CalculationType;
+
+    @Column({ type: 'enum', enum: CalculationBase, nullable: true })
+    calculationBase: CalculationBase;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    value: number;
+
+    @Column({ default: false })
+    editable: boolean;
+
+    @Column({ default: true })
+    active: boolean;
 }

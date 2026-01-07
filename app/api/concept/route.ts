@@ -28,6 +28,8 @@ export async function POST(req: Request) {
         
         const body = await req.json()
 
+        console.log(body)
+
         const concept = conceptRepo.create(body)
 
         const saved = await conceptRepo.save(concept)

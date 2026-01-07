@@ -27,6 +27,8 @@ export async function GET() {
             "emp.documentType AS documentType",
             "emp.documentNumber AS documentNumber",
             "emp.country AS country",
+            "emp.state AS state",
+            "emp.city AS city",
             "emp.address AS address",
             "emp.phone AS phone",
             "emp.email AS email",
@@ -52,6 +54,8 @@ export async function GET() {
         documentType: item.documenttype, // OJO la propiedad es lowercase
         documentNumber: item.documentnumber,
         country: item.country,
+        state: item.state,
+        city: item.city,
         address: item.address,
         phone: item.phone,
         email: item.email,

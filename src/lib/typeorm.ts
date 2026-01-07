@@ -6,6 +6,7 @@ import { Concept } from "../entities/Concept";
 import { NominaDet } from "../entities/NominaDet";
 import { PayrollSchemeEnc } from "../entities/PayrollSchemeEnc";
 import { PayrollSchemeDet } from "../entities/PayrollSchemeDet";
+import { Config } from "../entities/Config";
 
 let dataSource: DataSource;
 
@@ -19,7 +20,7 @@ export const getDataSource = async () => {
                 rejectUnauthorized: false
             },
             synchronize: true,
-            entities: [Employee, Nomina, NominaEnc, NominaDet, PayrollSchemeEnc, PayrollSchemeDet,Concept], // 👈 Todas automáticamente
+            entities: [Employee, Nomina, NominaEnc, NominaDet, PayrollSchemeEnc, PayrollSchemeDet, Concept, Config], // 👈 Todas automáticamente
         });
 
         if (!dataSource.isInitialized) {

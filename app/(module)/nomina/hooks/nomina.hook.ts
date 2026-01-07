@@ -13,6 +13,7 @@ export function useCreateNomina() {
     return useMutation({
         mutationKey: ["nomina-create"],
         mutationFn: async ({ year, month }: Props) => {
+
             const res = await fetch("http://localhost:3000/api/nomina", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -20,7 +21,7 @@ export function useCreateNomina() {
             })
 
             if (!res.ok) {
-                throw new Error("Error al crear el periodo")
+                throw new Error(JSON.parse(await res.text()).message)
             }
 
             return res.json()
@@ -38,13 +39,17 @@ export function useGenerateNomina() {
     return useMutation({
         mutationKey: ["nomina-generate"],
         mutationFn: async (id: number) => {
+
+
             const res = await fetch(`http://localhost:3000/api/nomina/${id}`,{
                 method: "POST"
             })
 
-            if(!res.ok){
-                throw new Error("Error al crear el periodo")
+            if (!res.ok) {
+                throw new Error(JSON.parse(await res.text()).message)
             }
+
+            return res.json()
 
             
         },

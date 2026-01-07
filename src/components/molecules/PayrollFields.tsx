@@ -7,8 +7,26 @@ import { columnDefsPayrollSchemeDet } from "@/src/static/ColumnDefsTable";
 export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExtend; onChange: (field: keyof PayrollSchemeTypeExtend, value: any) => void }) {
 
     const payrollSchemeDet = data.payrollSchemeDet
-    //console.log(data)
-    //console.log(payrollSchemeDet)
+    const normalizedPayrollSchemeDet =
+        payrollSchemeDet.map((item: any) => ({
+            concept_id:
+                item.concept_id ??
+                item.concept?.id ??
+                0,
+
+            concept_code:
+                item.concept_code ??
+                item.concept?.code ??
+                "",
+
+            concept_description:
+                item.concept_description ??
+                item.concept?.description ??
+                "",
+
+            value: Number(item.value) || 0,
+            hours: Number(item.hours) || 0
+        }));
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -116,7 +134,7 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
 
             <div className="col-span-3">
                 <DataEntryTable
-                    rowData={payrollSchemeDet}
+                    rowData={normalizedPayrollSchemeDet}
                     columnDefs={columnDefsPayrollSchemeDet}
                     height={350}
                     startEditColKey="concept_code"
@@ -131,7 +149,7 @@ export function PayrollFields({ data, onChange }: { data: PayrollSchemeTypeExten
                     onTrigger={async (code, params) => {
                         const res = await fetch(`/api/concept/by-code/${code}`);
                         const concept = await res.json();
-                        console.log("COncepto: ", concept)
+                        //console.log("COncepto: ", concept)
                         if (!concept) return;
 
                         params.node.setDataValue('concept_id', concept.id);

@@ -28,7 +28,7 @@ export function NominaPage() {
     });
 
     const handleGenerate = () => {
-        console.log(selectedId)
+        //console.log(selectedId)
         if (selectedId) {
             swalWithTailwind
                 .fire({
@@ -49,10 +49,10 @@ export function NominaPage() {
                                     icon: "success",
                                 });
                             },
-                            onError: () => {
+                            onError: (e) => {
                                 swalWithTailwind.fire({
                                     title: "Error",
-                                    text: "No se pudo generar la nómina.",
+                                    text: "No se pudo generar la nómina. " + e,
                                     icon: "error",
                                 });
                             },
