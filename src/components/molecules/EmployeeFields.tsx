@@ -3,6 +3,9 @@ import { EmployeeWithoutId } from "@/src/types/employee.type";
 import { useQuery } from "@tanstack/react-query";
 import { Country, State, City } from 'country-state-city';
 import { LocationSelector } from "../organisms/LocationSelector/LocationSelector";
+import { InputField } from "./UI/InputField";
+import { SelectField } from "./UI/SelectField";
+import { Bank, BankAccountType, ContractType, DocumentType, JobPosition } from "@/src/entities/enums";
 
 interface EditEmployeeFieldsProps {
   data?: EmployeeWithoutId;
@@ -30,26 +33,24 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Nombre */}
-          <div>
-            <label className="font-semibold">Nombre</label>
-            <input
-              value={data?.name ?? ""}
-              onChange={(e) => onChange?.("name", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Nombre"}}
+            inputProps={{
+              value: data?.name ?? "",
+              onChange: (e) => onChange?.("name", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Edad */}
-          <div>
-            <label className="font-semibold">Edad</label>
-            <input
-              type="number"
-              value={data?.age ?? ""}
-              onChange={(e) => onChange?.("age", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-
+          <InputField
+            labelProps={{children:"Edad"}}
+            inputProps={{
+              value: data?.age ?? "",
+              onChange: (e) => onChange?.("age", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
         </div>
       </section>
 
@@ -59,34 +60,28 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Tipo documento */}
-          <div>
-            <label className="font-semibold">Tipo de Documento</label>
-            <input
-              value={data?.documentType ?? ""}
-              onChange={(e) => onChange?.("documentType", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+
+          <SelectField
+            labelProps={{children: 'Tipo de Documento'}}
+            selectProps={{
+              value: data?.documentType ?? "", 
+              onChange:  (e) => onChange?.("documentType", e.target.value),
+              className: 'border p-2 rounded w-full'
+            }}
+            options={DocumentType}
+          />
 
           {/* Número documento */}
-          <div>
-            <label className="font-semibold">Número de Documento</label>
-            <input
-              value={data?.documentNumber ?? ""}
-              onChange={(e) => onChange?.("documentNumber", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Número de Documento"}}
+            inputProps={{
+              value: data?.documentNumber ?? "",
+              onChange: (e) => onChange?.("documentNumber", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
-          {/* País 
-          <div>
-            <label className="font-semibold">País</label>
-            <input
-              value={data?.country ?? ""}
-              onChange={(e) => onChange?.("country", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>*/}
+          {/* Localizacion */}
 
           <div className="md:col-span-2">
             <LocationSelector
@@ -104,34 +99,34 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
           </div>
 
           {/* Dirección */}
-          <div>
-            <label className="font-semibold">Dirección</label>
-            <input
-              value={data?.address ?? ""}
-              onChange={(e) => onChange?.("address", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Dirección"}}
+            inputProps={{
+              value: data?.address ?? "",
+              onChange: (e) => onChange?.("address", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Teléfono */}
-          <div>
-            <label className="font-semibold">Teléfono</label>
-            <input
-              value={data?.phone ?? ""}
-              onChange={(e) => onChange?.("phone", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Teléfono"}}
+            inputProps={{
+              value: data?.phone ?? "",
+              onChange: (e) => onChange?.("phone", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Email */}
-          <div>
-            <label className="font-semibold">Email</label>
-            <input
-              value={data?.email ?? ""}
-              onChange={(e) => onChange?.("email", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Email"}}
+            inputProps={{
+              value: data?.email ?? "",
+              onChange: (e) => onChange?.("email", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
         </div>
       </section>
@@ -142,63 +137,65 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Fecha de ingreso */}
-          <div>
-            <label className="font-semibold">Fecha de Ingreso</label>
-            <input
-              type="date"
-              value={data?.hireDate ? data.hireDate.toString().substring(0, 10) : ""}
-              onChange={(e) => onChange?.("hireDate", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Fecha de Ingreso"}}
+            inputProps={{
+              type: 'date',
+              value: data?.hireDate ? data.hireDate.toString().substring(0, 10) : "",
+              onChange: (e) => onChange?.("hireDate", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Tipo de contrato */}
-          <div>
-            <label className="font-semibold">Tipo de Contrato</label>
-            <input
-              value={data?.contractType ?? ""}
-              onChange={(e) => onChange?.("contractType", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <SelectField
+            labelProps={{children: 'Tipo de Contrato' }}
+            selectProps={{
+              value: data?.contractType ?? "",
+              onChange: (e) => onChange?.("contractType", e.target.value),
+              className: 'border p-2 rounded w-full'
+            }}
+            options={ContractType}
+          />
 
           {/* Cargo */}
-          <div>
-            <label className="font-semibold">Cargo</label>
-            <input
-              value={data?.position ?? ""}
-              onChange={(e) => onChange?.("position", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+
+          <SelectField
+            labelProps={{children: 'Cargo'}}
+            selectProps={{
+              value: data?.position ?? "",
+              onChange: (e) => onChange?.("position", e.target.value),
+              className: 'border p-2 rounded w-full'
+            }}
+            options={JobPosition}
+          />
 
           {/* Salario */}
-          <div>
-            <label className="font-semibold">Salario</label>
-            <input
-              type="number"
-              value={data?.salary ?? ""}
-              onChange={(e) => onChange?.("salary", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Salario"}}
+            inputProps={{
+              type: 'number',
+              value: data?.salary ?? "",
+              onChange: (e) => onChange?.("salary", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Plantilla */}
-          <div>
-            <label className="font-semibold">Plantilla</label>
-            <select
-              value={data?.payrollSchemeEnc_id ?? ""}
-              onChange={(e) => onChange?.("payrollSchemeEnc_id", e.target.value)}
-              className="border p-2 rounded w-full"
-            >
-              <option value="">Seleccione una plantilla</option>
-              {payrollSchemes?.map((scheme) => (
+          <SelectField
+            labelProps={{children: 'Plantilla'}}
+            selectProps={{
+              value: data?.payrollSchemeEnc_id ?? "",
+              onChange: (e) => onChange?.("payrollSchemeEnc_id", e.target.value),
+              className: 'border p-2 rounded w-full'
+            }}
+          >
+            {payrollSchemes?.map((scheme) => (
                 <option key={scheme.id} value={scheme.id}>
                   {scheme.description}
                 </option>
               ))}
-            </select>
-          </div>
+          </SelectField>
 
         </div>
       </section>
@@ -209,34 +206,37 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* EPS */}
-          <div>
-            <label className="font-semibold">EPS</label>
-            <input
-              value={data?.eps ?? ""}
-              onChange={(e) => onChange?.("eps", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"EPS"}}
+            inputProps={{
+              type: 'text',
+              value: data?.eps ?? "",
+              onChange: (e) => onChange?.("eps", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* Pensión */}
-          <div>
-            <label className="font-semibold">Pensión</label>
-            <input
-              value={data?.pension ?? ""}
-              onChange={(e) => onChange?.("pension", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"Pensión"}}
+            inputProps={{
+              type: 'text',
+              value: data?.pension ?? "",
+              onChange: (e) => onChange?.("pension", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
           {/* ARL */}
-          <div>
-            <label className="font-semibold">ARL</label>
-            <input
-              value={data?.arl ?? ""}
-              onChange={(e) => onChange?.("arl", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children:"ARL"}}
+            inputProps={{
+              type: 'text',
+              value: data?.arl ?? "",
+              onChange: (e) => onChange?.("arl", e.target.value),
+              className: "border p-2 rounded w-full"
+            }}
+          />
 
         </div>
       </section>
@@ -247,24 +247,26 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Banco */}
-          <div>
-            <label className="font-semibold">Banco</label>
-            <input
-              value={data?.bank ?? ""}
-              onChange={(e) => onChange?.("bank", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <SelectField
+            labelProps={{children: 'Tipo de Cuenta'}}
+            selectProps={{
+              value: data?.bank ?? "",
+              onChange:(e) => onChange?.("bank", e.target.value),
+              className:"border p-2 rounded w-full"
+            }}
+            options={Bank}
+          />
 
           {/* Tipo de cuenta */}
-          <div>
-            <label className="font-semibold">Tipo de Cuenta</label>
-            <input
-              value={data?.accountType ?? ""}
-              onChange={(e) => onChange?.("accountType", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <SelectField
+            labelProps={{children: 'Tipo de Cuenta'}}
+            selectProps={{
+              value: data?.accountType ?? "",
+              onChange:(e) => onChange?.("accountNumber", e.target.value),
+              className:"border p-2 rounded w-full"
+            }}
+            options={BankAccountType}
+          />
 
           {/* Número de cuenta */}
           <div>

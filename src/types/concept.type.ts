@@ -5,7 +5,8 @@ export const ConceptSchema = z.object({
     code: z.string(),
     description: z.string(),
     type: z.string(),
-    value: z.string()
+    calculationType: z.string(),
+    calculationBase: z.string()
 });
 
 export const ConceptWithoutId = ConceptSchema.omit({ id: true });

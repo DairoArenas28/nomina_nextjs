@@ -1,4 +1,7 @@
 import { ConceptWithoutId } from "@/src/types/concept.type";
+import { InputField } from "./UI/InputField";
+import { SelectField } from "./UI/SelectField";
+import { CalculationBase, CalculationType, ConceptType } from "@/src/entities/enums";
 
 interface ConceptFieldsProps {
   data?: ConceptWithoutId;
@@ -11,54 +14,66 @@ export function ConceptFields({ data, onChange }: ConceptFieldsProps) {
       <section>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Código */}
-          <div>
-            <label className="font-semibold">Código</label>
-            <input
-              name="code"
-              value={data?.code ?? ""}
-              onChange={(e) => onChange?.("code", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          {/* Descripción */}
-          <div>
-            <label className="font-semibold">Descripción</label>
-            <input
-              name="description"
-              type="text"
-              value={data?.description ?? ""}
-              onChange={(e) => onChange?.("description", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField labelProps={{children: "Código"}} inputProps={
+            {
+              name: "code", 
+              type: "text", value:data?.code ?? "", 
+              onChange: (e) => onChange?.("code", e.target.value), 
+              className: "border p-2 rounded w-full" 
+            }
+          }/>
+
+          <InputField labelProps={{children: "Descripción"}} inputProps={
+            {
+              name: "description", 
+              type: "text", value:data?.description ?? "", 
+              onChange: (e) => onChange?.("description", e.target.value), 
+              className: "border p-2 rounded w-full" 
+            }
+          }/>
+
           {/* Tipo de concepto */}
-          <div>
-            <label className="font-semibold">Tipo de concepto</label>
-            <select
-              value={data?.type}
-              name="type"
-              onChange={(e) => onChange("type", e.target.value)}
-              className="border p-2 rounded w-full cursor-pointer"
-            >
-              <option value=""></option>
-              <option value="Devengado">Devengado</option>
-              <option value="Deducido">Deducido</option>
-            </select>
-          </div>
+
+          <SelectField
+            labelProps={{children: "Tipo de concepto"}}
+            selectProps={
+              {
+                value: data?.type, name:"type", 
+                onChange: (e) => onChange("type", e.target.value), 
+                className:"border p-2 rounded w-full cursor-pointer"
+              }
+            }
+            options={ConceptType}
+          />
+
+          {/* Tipo de cálculo */}
+
+          <SelectField
+            labelProps={{children: "Tipo de cálculo"}}
+            selectProps={
+              {name: "calculationType", 
+                value:data?.calculationType, 
+                onChange: (e) => onChange("calculationType", e.target.value), 
+                className:"border p-2 rounded w-full cursor-pointer"
+              }
+            }
+            options={CalculationType}
+          />
+
           {/* Valor */}
-          <div>
-            <label className="font-semibold">Valor</label>
-            <select
-              value={data?.value}
-              name="value"
-              onChange={(e) => onChange("value", e.target.value)}
-              className="border p-2 rounded w-full cursor-pointer"
-            >
-              <option value=""></option>
-              <option value="Hours">Hora</option>
-              <option value="Value">Valor</option>
-            </select>
-          </div>
+
+          <SelectField
+            labelProps={{children: "Base"}}
+            selectProps={
+              {name: "calculationBase", 
+                value:data?.calculationBase, 
+                onChange: (e) => onChange("calculationBase", e.target.value), 
+                className:"border p-2 rounded w-full cursor-pointer"
+              }
+            }
+            options={CalculationBase}
+          />
+    
         </div>
       </section>
     </div>
