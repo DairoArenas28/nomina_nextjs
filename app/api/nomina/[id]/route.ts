@@ -5,10 +5,8 @@ import { getDataSource } from "@/src/lib/typeorm";
 import { NextResponse } from "next/server"
 import { formatConsecutive } from "@/src/utils/consecutive";
 import { NominaDet } from "@/src/entities/NominaDet";
-import { Concept } from "@/src/entities/Concept";
-import { NominaState } from "@/src/entities/enums";
+import { ConceptType, NominaState } from "@/src/enums";
 import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
-import { PayrollSchemeDet } from "@/src/entities/PayrollSchemeDet";
 import { Config } from "@/src/entities/Config";
 
 
@@ -53,7 +51,7 @@ export async function POST(
             let accrualNomina = 0
 
             /* ===============================
-               CONFIGURACIÓN GENERAL
+                CONFIGURACIÓN GENERAL
             =============================== */
 
             const [config] = await configRepo.find({
@@ -68,7 +66,7 @@ export async function POST(
             }
 
             /* ===============================
-               NÓMINA
+                NÓMINA
             =============================== */
 
             const nomina = await nominaRepo.findOneBy({ id: Number(id) })
@@ -77,12 +75,12 @@ export async function POST(
                 throw new Error("Nómina no encontrada")
             }
 
-            if (nomina.state === NominaState.GENERADO) {
+            if (nomina.state === NominaState.GENERATED) {
                 throw new Error("La nómina ya fue generada")
             }
 
             /* ===============================
-               EMPLEADOS
+                EMPLEADOS
             =============================== */
 
             const employees = await employeeRepo.find({
@@ -96,7 +94,7 @@ export async function POST(
             let totalRegisterNominaEnc = await nominaEncRepo.count()
 
             /* ===============================
-               PROCESO DE NÓMINA
+                PROCESO DE NÓMINA
             =============================== */
 
             for (const employee of employees) {
@@ -120,7 +118,7 @@ export async function POST(
                 }
 
                 /* ===============================
-                   NÓMINA ENCABEZADO
+                    NÓMINA ENCABEZADO
                 =============================== */
 
                 const nominaEnc = nominaEncRepo.create({
@@ -133,7 +131,7 @@ export async function POST(
                 const savedNominaEnc = await nominaEncRepo.save(nominaEnc)
 
                 /* ===============================
-                   NÓMINA DETALLE
+                    NÓMINA DETALLE
                 =============================== */
 
                 for (const item of payrollScheme.payrollSchemeDet) {
@@ -142,7 +140,7 @@ export async function POST(
                         ? item.hours * employee.valueHoursSalary
                         : item.value
 
-                    if (item.concept.type === "Deducido") {
+                    if (item.concept.type === ConceptType.DEDUCTION) {
                         deductedNominaEnc += total
                     } else {
                         accrualNominaEnc += total
@@ -158,7 +156,7 @@ export async function POST(
                 }
 
                 /* ===============================
-                   TOTALES EMPLEADO
+                    TOTALES EMPLEADO
                 =============================== */
 
                 savedNominaEnc.accrual = accrualNominaEnc
@@ -172,10 +170,10 @@ export async function POST(
             }
 
             /* ===============================
-               TOTALES NÓMINA
+                TOTALES NÓMINA
             =============================== */
 
-            nomina.state = NominaState.GENERADO
+            nomina.state = NominaState.GENERATED
             nomina.accrual = accrualNomina
             nomina.deducted = deductedNomina
             nomina.total = accrualNomina - deductedNomina
@@ -185,11 +183,18 @@ export async function POST(
 
         return NextResponse.json({ ok: true })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("ERROR GENERANDO NÓMINA:", error)
 
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { message: error.message },
+                { status: 500 }
+            )
+        }
+
         return NextResponse.json(
-            { message: error.message ?? "Error generando la nómina" },
+            { message: "Error generando la nómina" },
             { status: 500 }
         )
     }

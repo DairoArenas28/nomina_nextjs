@@ -19,7 +19,7 @@ export function useCreateConcept() {
             })
 
             if(!res.ok){
-                throw new Error("Error al crear el concepto")
+                throw new Error(JSON.parse(await res.text()).message)
             }
 
             return res.json()

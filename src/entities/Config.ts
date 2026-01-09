@@ -44,8 +44,8 @@ export class Config {
   healthEmployerPercent: number;
 
   // Pensión
-  @Column("decimal", { precision: 5, scale: 2 })
-  pensionEmployeePercent: number;
+   @Column("decimal", { precision: 5, scale: 2 })
+   pensionEmployeePercent: number;
 
   @Column("decimal", { precision: 5, scale: 2 })
   pensionEmployerPercent: number;

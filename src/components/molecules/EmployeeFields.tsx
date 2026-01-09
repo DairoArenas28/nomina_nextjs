@@ -1,11 +1,10 @@
 import { PayrollSchemeEnc } from "@/src/entities/PayrollSchemeEnc";
 import { EmployeeWithoutId } from "@/src/types/employee.type";
 import { useQuery } from "@tanstack/react-query";
-import { Country, State, City } from 'country-state-city';
 import { LocationSelector } from "../organisms/LocationSelector/LocationSelector";
 import { InputField } from "./UI/InputField";
 import { SelectField } from "./UI/SelectField";
-import { Bank, BankAccountType, ContractType, DocumentType, JobPosition } from "@/src/entities/enums";
+import { BankAccountTypeLabel, BankLabel, ContractTypeLabel, DocumentTypeLabel, JobPositionLabel } from "@/src/constants";
 
 interface EditEmployeeFieldsProps {
   data?: EmployeeWithoutId;
@@ -68,7 +67,7 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
               onChange:  (e) => onChange?.("documentType", e.target.value),
               className: 'border p-2 rounded w-full'
             }}
-            options={DocumentType}
+            options={DocumentTypeLabel}
           />
 
           {/* Número documento */}
@@ -155,7 +154,7 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
               onChange: (e) => onChange?.("contractType", e.target.value),
               className: 'border p-2 rounded w-full'
             }}
-            options={ContractType}
+            options={ContractTypeLabel}
           />
 
           {/* Cargo */}
@@ -167,7 +166,7 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
               onChange: (e) => onChange?.("position", e.target.value),
               className: 'border p-2 rounded w-full'
             }}
-            options={JobPosition}
+            options={JobPositionLabel}
           />
 
           {/* Salario */}
@@ -254,7 +253,7 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
               onChange:(e) => onChange?.("bank", e.target.value),
               className:"border p-2 rounded w-full"
             }}
-            options={Bank}
+            options={BankLabel}
           />
 
           {/* Tipo de cuenta */}
@@ -262,21 +261,21 @@ export function EmployeeFields({ data, onChange }: EditEmployeeFieldsProps) {
             labelProps={{children: 'Tipo de Cuenta'}}
             selectProps={{
               value: data?.accountType ?? "",
-              onChange:(e) => onChange?.("accountNumber", e.target.value),
+              onChange:(e) => onChange?.("accountType", e.target.value),
               className:"border p-2 rounded w-full"
             }}
-            options={BankAccountType}
+            options={BankAccountTypeLabel}
           />
 
           {/* Número de cuenta */}
-          <div>
-            <label className="font-semibold">Número de Cuenta</label>
-            <input
-              value={data?.accountNumber ?? ""}
-              onChange={(e) => onChange?.("accountNumber", e.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          <InputField
+            labelProps={{children: 'Número de Cuenta'}}
+            inputProps={{
+              value: data?.accountNumber ?? "",
+              onChange: (e) => onChange?.("accountNumber", e.target.value),
+              className: 'border p-2 rounded w-full'
+            }}
+          />
 
         </div>
       </section>

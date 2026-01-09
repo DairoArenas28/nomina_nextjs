@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Employee } from "./Employee";
 import { Nomina } from "./Nomina";
-import { NominaState } from "./enums";
+import { NominaState } from "../enums";
 
 @Entity()
 export class NominaEnc {
@@ -18,7 +18,7 @@ export class NominaEnc {
     @Column({
         type: "enum",
         enum: NominaState,
-        default: NominaState.GENERADO
+        default: NominaState.GENERATED
     })
     state: string
 

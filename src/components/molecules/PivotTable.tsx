@@ -155,8 +155,8 @@ export default function PivotTable({
                                                 ? "¡Registro Creado!"
                                                 : "¡Registro Actualizado!"
                                         ),
-                                    onError: () =>
-                                        swalError("No se pudo completar la operación"),
+                                    onError: (e) =>
+                                        swalError("No se pudo completar la operación" + e),
                                 }
                             );
 

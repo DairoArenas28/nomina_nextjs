@@ -106,3 +106,8 @@ Devengado
 Deduccido	
 
 Total
+
+
+Puntos a mejorar
+- En el frontend no es debido usar enum, por sobrecarga en el compilado, se recomienda usar as const y tiparlos
+- 

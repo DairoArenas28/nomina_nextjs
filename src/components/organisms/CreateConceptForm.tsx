@@ -11,7 +11,14 @@ export function CreateConceptForm({ onSubmit }: EditFormProps) {
         code: "",
         description: "",
         type: "",
-        value: ""
+        category: "",
+        calculationType: "",
+        calculationBase: "",
+        percentage: 0,
+        overtimeType: "",
+        value: 0,
+        editable: true,
+        active: true
     });
 
     // 👉 ESTE era el faltante
@@ -24,7 +31,7 @@ export function CreateConceptForm({ onSubmit }: EditFormProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(formData); 
+        onSubmit(formData);
     };
 
     return (

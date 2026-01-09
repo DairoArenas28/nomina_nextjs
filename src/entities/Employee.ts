@@ -76,7 +76,7 @@ export class Employee {
 
     //@OneToMany(() => NominaEnc, (nominaEnc) => nominaEnc.employee)
     //nominaEnc: NominaEnc[]
-    @ManyToOne(() => PayrollSchemeEnc)
+    @ManyToOne(() => PayrollSchemeEnc, {nullable: true})
     @JoinColumn({ name: "PayrollSchemeEnc_id" })
     payrollSchemeEnc: PayrollSchemeEnc; 
 }

@@ -1,6 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { NominaEnc } from './NominaEnc'
-import { NominaState } from './enums'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { NominaState } from '../enums'
 @Entity()
 export class Nomina {
 
@@ -16,7 +15,7 @@ export class Nomina {
     @Column({
         type:"enum",
         enum: NominaState,
-        default: NominaState.NOTGENERADO
+        default: NominaState.NOT_GENERATED
     })
     state: string
 

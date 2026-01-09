@@ -7,7 +7,7 @@ type SelectFieldProps<T extends EnumLike> = {
     labelProps: React.LabelHTMLAttributes<HTMLLabelElement>
     selectProps: React.SelectHTMLAttributes<HTMLSelectElement>
 
-    options?: T               // enum / objeto as const
+    options?: T          // enum / objeto as const
     placeholder?: string
     children?: React.ReactNode
 }
@@ -30,7 +30,7 @@ export function SelectField<T extends EnumLike>({
                     ? children
                     : options &&
                     Object.entries(options).map(([key, value]) => (
-                        <option key={key} value={value}>
+                        <option key={key} value={key}>
                             {value}
                         </option>
                     ))}
